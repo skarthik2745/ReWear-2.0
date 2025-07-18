@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages | ReWear</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:400,700|Quicksand:400,700|Montserrat:400,600|Caveat:400,600|Lora:400,500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="gradient-bg">
+    <div class="bg-texture"></div>
+    <nav class="navbar">
+      <div class="nav-left">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-btn home-btn">Home</a></li>
+          <li>
+            <a href="donate.html" class="nav-btn donate-nav-btn">Donate</a>
+          </li>
+          <li>
+            <a href="browse.html" class="nav-btn browse-nav-btn">Browse</a>
+          </li>
+          <li>
+            <a href="profile.html" class="nav-btn profile-nav-btn">Profile</a>
+          </li>
+          <li>
+            <a href="messages.html" class="nav-btn messages-nav-btn"
+              >Messages</a
+            >
+          </li>
+          <li>
+            <a href="impact.html" class="nav-btn impact-nav-btn"
+              >Impact Board</a
+            >
+          </li>
+          <li>
+            <a href="events.html" class="nav-btn events-nav-btn">Events</a>
+          </li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#" id="logoutBtn" class="nav-btn logout-nav-btn">Logout</a>
+      </div>
+    </nav>
+    <main>
+      <section class="messages-section card">
+        <h2>Messages</h2>
+        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem">
+          <button
+            id="receivedTab"
+            class="main-btn"
+            style="background: #2563eb; color: #fff"
+          >
+            Received Requests
+          </button>
+          <button
+            id="sentTab"
+            class="main-btn"
+            style="background: #f59e42; color: #fff"
+          >
+            Sent Requests
+          </button>
+        </div>
+        <div id="messagesList" class="messages-list"></div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>&copy; 2024 ReWear. All rights reserved.</p>
+    </footer>
+    <script src="js/messages.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function () {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "login.html";
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

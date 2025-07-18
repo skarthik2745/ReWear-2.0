@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | ReWear</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="gradient-bg">
+    <div class="container auth-container">
+      <div class="auth-box">
+        <h2 class="brand">ReWear</h2>
+        <h3>Login to Your Account</h3>
+        <form id="loginForm" autocomplete="off">
+          <div class="form-group">
+            <label for="loginEmail">Email or Full Name</label>
+            <input type="text" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required minlength="6" />
+          </div>
+          <div style="text-align: right; margin-bottom: 0.7rem">
+            <a href="forgot-password.html" class="forgot-link"
+              >Forgot Password?</a
+            >
+          </div>
+          <button type="submit" class="main-btn">Login</button>
+          <p class="auth-switch">
+            Don't have an account? <a href="register.html">Register</a>
+          </p>
+        </form>
+      </div>
+    </div>
+    <script src="js/login.js"></script>
+  </body>
+</html>

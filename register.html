@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | ReWear</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="gradient-bg">
+    <div class="container auth-container">
+      <div class="auth-box">
+        <h2 class="brand">ReWear</h2>
+        <h3>Create Your Account</h3>
+        <form id="registerForm" autocomplete="off">
+          <div class="form-group">
+            <label for="regName">Full Name</label>
+            <input type="text" id="regName" required />
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="regPhone">Phone Number</label>
+            <input type="tel" id="regPhone" required pattern="[0-9]{10,15}" />
+          </div>
+          <div class="form-group">
+            <label for="regAddress">Full Address</label>
+            <input type="text" id="regAddress" required />
+          </div>
+          <div class="form-group">
+            <label for="regDob">Date of Birth</label>
+            <input type="date" id="regDob" required />
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" required minlength="6" />
+          </div>
+          <button type="submit" class="main-btn">Register</button>
+          <p class="auth-switch">
+            Already have an account? <a href="login.html">Login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+    <script src="js/register.js"></script>
+  </body>
+</html>

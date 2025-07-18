@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile | ReWear</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:400,700|Quicksand:400,700|Montserrat:400,600|Caveat:400,600|Lora:400,500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body.gradient-bg {
+        background: linear-gradient(
+          135deg,
+          #fdf6f0 0%,
+          #fae6fa 100%
+        ) !important;
+        min-height: 100vh;
+        font-family: "Poppins", "Segoe UI", sans-serif !important;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 2.2rem;
+        background: none;
+        box-shadow: none;
+      }
+      .header-row {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+      .header h1 {
+        margin: 0 auto;
+        color: #4b0082;
+        background: #e6e6fa;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-weight: bold;
+        font-size: 24px;
+        border-radius: 10px;
+        padding: 10px 32px;
+        box-shadow: 0 2px 8px #e6e6fa44;
+        letter-spacing: 0.01em;
+        text-align: center;
+        display: inline-block;
+      }
+      .profile-heading {
+        text-align: center;
+        font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #4b0082;
+        background: #f7f4ff;
+        padding: 16px 48px 12px 48px;
+        margin: 0 auto 1.5rem auto;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px #e6e6fa33;
+        min-width: 320px;
+        max-width: 480px;
+        letter-spacing: 0.01em;
+        border-bottom: 2px solid #e6e6fa;
+      }
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh;
+      }
+      .profile-section.card {
+        background: #fff;
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 24px rgba(75, 0, 130, 0.08);
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        max-width: 420px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile-info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile-pic-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+      .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 16px rgba(75, 0, 130, 0.1);
+        border: 3px solid #e6e6fa;
+        margin-bottom: 0.7rem;
+        background: #f8f8ff;
+      }
+      #editPicBtn,
+      #removePicBtn {
+        border-radius: 1.2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.5rem 1.3rem;
+        margin-bottom: 0.3rem;
+        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.07);
+        border: none;
+        transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+        cursor: pointer;
+      }
+      #editPicBtn {
+        background: #e6e6fa;
+        color: #4b0082;
+      }
+      #editPicBtn:hover {
+        background: #d1c4e9;
+        color: #fff;
+      }
+      #removePicBtn {
+        background: #ffa07a;
+        color: #fff;
+      }
+      #removePicBtn:hover {
+        background: #ff7f50;
+        color: #fff;
+      }
+      .profile-form .form-group {
+        margin-bottom: 1.3rem;
+        width: 100%;
+      }
+      .profile-form label {
+        color: #3d2461;
+        font-weight: 600;
+        font-size: 1.05rem;
+        margin-bottom: 0.3rem;
+        display: block;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+      }
+      .profile-form input {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border-radius: 0.9rem;
+        border: 1.5px solid #e6e6fa;
+        background: #f8f8ff;
+        color: #4b0082;
+        font-size: 1rem;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        box-shadow: 0 2px 8px #e6e6fa22;
+        outline: none;
+        margin-top: 0.2rem;
+        transition: border 0.2s, box-shadow 0.2s;
+      }
+      .profile-form input:focus {
+        border: 2px solid #4b0082;
+        box-shadow: 0 2px 12px #e6e6fa55;
+      }
+      .main-btn[type="submit"] {
+        background: #4b0082;
+        color: #fff;
+        border-radius: 1.2rem;
+        font-weight: 700;
+        font-size: 1.08rem;
+        padding: 0.7rem 1.5rem;
+        margin-top: 0.7rem;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.1);
+      }
+      .main-btn[type="submit"]:hover {
+        background: #3d2461;
+        box-shadow: 0 4px 16px rgba(75, 0, 130, 0.15);
+      }
+      .donated-clothes-section {
+        margin-top: 2rem;
+        width: 100%;
+      }
+      .donated-clothes-section h3 {
+        color: #4b0082;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+      }
+      #userClothesGrid.clothes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .cloth-card {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.08);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #e6e6fa;
+      }
+      .cloth-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(75, 0, 130, 0.12);
+      }
+      .cloth-card .cloth-img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-bottom: 1px solid #e6e6fa;
+      }
+      .cloth-info {
+        padding: 1rem;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+      }
+      .cloth-card .main-btn {
+        background: #4b0082;
+        color: #fff;
+        border-radius: 0.8rem;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        margin-top: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s;
+      }
+      .cloth-card .edit-btn {
+        background: #e6e6fa;
+        color: #4b0082;
+        margin-right: 0.5rem;
+      }
+      .cloth-card .edit-btn:hover {
+        background: #d1c4e9;
+      }
+      .cloth-card .delete-btn {
+        background: #ffa07a;
+        color: #fff;
+      }
+      .cloth-card .delete-btn:hover {
+        background: #ff7f50;
+      }
+      @media (max-width: 900px) {
+        .profile-section {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+        .donated-clothes-section {
+          margin-top: 1.5rem;
+        }
+        #userClothesGrid.clothes-grid {
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+        .filter-bar {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+      @media (max-width: 600px) {
+        .profile-section,
+        .profile-section.card {
+          margin: 0.5rem;
+          padding: 1rem;
+          border-radius: 1rem;
+        }
+        .profile-info {
+          width: 100%;
+        }
+        .donated-clothes-section {
+          margin-top: 1rem;
+        }
+        #userClothesGrid.clothes-grid {
+          grid-template-columns: 1fr;
+          gap: 0.8rem;
+        }
+        .cloth-card {
+          margin: 0;
+        }
+        .cloth-card .cloth-img {
+          height: 120px;
+        }
+        .filter-bar {
+          padding: 0.8rem;
+        }
+        .filter-bar input,
+        .filter-bar select {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="gradient-bg">
+    <div class="bg-texture"></div>
+    <nav class="navbar">
+      <div class="nav-left">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-btn home-btn">Home</a></li>
+          <li>
+            <a href="donate.html" class="nav-btn donate-nav-btn">Donate</a>
+          </li>
+          <li>
+            <a href="browse.html" class="nav-btn browse-nav-btn">Browse</a>
+          </li>
+          <li>
+            <a href="profile.html" class="nav-btn profile-nav-btn">Profile</a>
+          </li>
+          <li>
+            <a href="messages.html" class="nav-btn messages-nav-btn"
+              >Messages</a
+            >
+          </li>
+          <li>
+            <a href="impact.html" class="nav-btn impact-nav-btn"
+              >Impact Board</a
+            >
+          </li>
+          <li>
+            <a href="events.html" class="nav-btn events-nav-btn">Events</a>
+          </li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#" id="logoutBtn" class="nav-btn logout-nav-btn">Logout</a>
+      </div>
+    </nav>
+    <div class="profile-heading">Your Profile</div>
+    <main>
+      <section class="profile-section card">
+        <div class="profile-info">
+          <div class="profile-pic-wrap">
+            <img
+              id="profilePic"
+              src="assets/images/avatar-placeholder.png"
+              alt="Profile Picture"
+              class="profile-pic"
+            />
+            <input
+              type="file"
+              id="profilePicInput"
+              accept="image/*"
+              style="display: none"
+            />
+            <button id="editPicBtn" class="main-btn" style="margin-top: 8px">
+              Edit Picture
+            </button>
+            <button
+              id="removePicBtn"
+              class="main-btn"
+              style="background: #ef4444; margin-top: 8px"
+            >
+              Remove Photo
+            </button>
+          </div>
+          <form id="profileForm">
+            <div class="form-group">
+              <label>Name</label><input type="text" id="profileName" required />
+            </div>
+            <div class="form-group">
+              <label>Email</label
+              ><input type="email" id="profileEmail" required />
+            </div>
+            <div class="form-group">
+              <label>Phone</label
+              ><input type="tel" id="profilePhone" required />
+            </div>
+            <div class="form-group">
+              <label>Address</label
+              ><input type="text" id="profileAddress" required />
+            </div>
+            <button type="submit" class="main-btn">Save Profile</button>
+          </form>
+        </div>
+      </section>
+      <!-- Removed donated clothes section as per user request -->
+    </main>
+    <footer class="footer">
+      <p>&copy; 2024 ReWear. All rights reserved.</p>
+    </footer>
+    <script src="js/profile.js"></script>
+    <div id="editClothModal" class="modal" style="display: none">
+      <div class="modal-content" style="max-width: 400px; width: 98vw">
+        <span class="close-btn" id="closeEditModal">&times;</span>
+        <form id="editClothForm">
+          <h2>Edit Cloth</h2>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="editClothName" required />
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="editClothCategory" required>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Kids</option>
+              <option>Others</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Condition</label>
+            <select id="editClothCondition" required>
+              <option>Excellent (Freshly Washed, Almost New)</option>
+              <option>Good (Gently Used, No Damage)</option>
+              <option>Usable (Minor Fading or Shrink)</option>
+              <option>Repairable (Needs Stitching or Small Fix)</option>
+              <option>Vintage (Old but Classic)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Size</label>
+            <input type="text" id="editClothSize" required />
+          </div>
+          <div class="form-group">
+            <label>Image</label>
+            <input type="file" id="editClothImg" accept="image/*" />
+            <img
+              id="editClothImgPreview"
+              style="
+                display: block;
+                max-width: 100px;
+                margin-top: 8px;
+                border-radius: 1rem;
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+              "
+            />
+          </div>
+          <button type="submit" class="main-btn">Save Changes</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function () {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "login.html";
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

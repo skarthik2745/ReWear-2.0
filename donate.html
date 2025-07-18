@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donate Clothes - ReWear</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:400,700|Nunito:400,700|Montserrat:400,600|Caveat:400,600|Lora:400,500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body.gradient-bg {
+        background: #fff0f5 !important;
+        font-family: "Poppins", "Nunito", sans-serif !important;
+      }
+      .header h1 {
+        background: linear-gradient(90deg, #ff6f91, #d6336c 80%);
+        color: #fff;
+        border-radius: 1.5rem;
+        padding: 0.7rem 2rem;
+        box-shadow: 0 4px 16px rgba(255, 105, 180, 0.13);
+        font-size: 2.2rem;
+        font-family: "Poppins", "Nunito", sans-serif;
+        font-weight: 700;
+        margin: 0 auto 1.5rem auto;
+        display: inline-block;
+        letter-spacing: 0.01em;
+        text-shadow: 0 2px 8px #ffb6c1;
+      }
+      .donation-form {
+        background: #fff0f5 !important;
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 24px rgba(255, 105, 180, 0.1) !important;
+        border: 1.5px solid #ffb6c1 !important;
+        position: relative;
+        z-index: 1;
+      }
+      .donation-form::before {
+        content: "💖";
+        position: absolute;
+        top: 10px;
+        right: 30px;
+        font-size: 5rem;
+        color: #ffd6e0;
+        opacity: 0.18;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        border-radius: 10px !important;
+        border: 1.5px solid #ffb6c1 !important;
+        background: #fff7fa !important;
+        box-shadow: 0 4px 6px rgba(255, 182, 193, 0.1) !important;
+        color: #22223b !important;
+        font-family: "Poppins", "Nunito", sans-serif !important;
+        font-size: 1.08rem;
+        padding: 0.7rem 1rem;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border: 2px solid #ffb6c1 !important;
+        box-shadow: 0 0 0 3px #ffe3ee !important;
+      }
+      .form-group label {
+        color: #d6336c !important;
+        font-weight: bold !important;
+        font-family: "Poppins", "Nunito", sans-serif !important;
+        font-size: 1.08rem;
+        margin-bottom: 0.4rem;
+      }
+      #donationForm .form-group:first-child {
+        border: 2px solid #ffb6c1;
+        border-radius: 12px;
+        background: #fff7fa;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .form-group {
+        margin-bottom: 1.5rem !important;
+      }
+      .main-btn.donate-btn {
+        background: #ffd6e0 !important;
+        border: 1.5px solid #ffb6c1 !important;
+        color: #d6336c !important;
+        font-weight: 700;
+        border-radius: 2rem;
+        box-shadow: 0 4px 6px rgba(255, 182, 193, 0.13);
+        font-size: 1.1rem;
+      }
+      .main-btn.donate-btn:hover {
+        background: #ffe3ee !important;
+        color: #d6336c !important;
+      }
+      .success-message {
+        color: #d6336c !important;
+        font-weight: 700;
+        margin-top: 1.2rem;
+        text-align: center;
+        font-size: 1.1rem;
+      }
+      .back-home {
+        color: #d6336c !important;
+        font-family: "Poppins", "Nunito", sans-serif !important;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+      .back-home:hover {
+        color: #ff6f91 !important;
+        text-decoration: underline;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        position: relative;
+        margin-bottom: 2rem;
+        background: none;
+        box-shadow: none;
+      }
+      .donate-heading {
+        background-color: #ff6f91;
+        color: #fff !important;
+        text-align: center;
+        font-size: 2.2rem;
+        padding: 15px 30px;
+        border-radius: 20px;
+        display: block;
+        margin: 0 auto;
+        font-family: "Poppins", "Nunito", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        box-shadow: 0 4px 16px rgba(255, 105, 180, 0.13);
+        text-shadow: 0 2px 8px #ffb6c1;
+        min-width: 320px;
+        flex-shrink: 0;
+      }
+      .header > div {
+        min-width: 120px;
+      }
+      @media (max-width: 600px) {
+        .header {
+          flex-direction: column;
+          gap: 0.7rem;
+          align-items: stretch;
+        }
+        .donate-heading {
+          min-width: 0;
+          font-size: 1.3rem;
+          padding: 0.5rem 1rem;
+        }
+        .header > div {
+          min-width: 0;
+        }
+      }
+      main,
+      .donation-form,
+      .header,
+      .footer {
+        position: relative;
+        z-index: 2;
+      }
+      @media (max-width: 700px) {
+        .heart-emoji {
+          font-size: clamp(1.1rem, 4vw, 2.2rem);
+        }
+      }
+    </style>
+  </head>
+  <body class="gradient-bg">
+    <div class="bg-texture"></div>
+    <nav class="navbar">
+      <div class="nav-left">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-btn home-btn">Home</a></li>
+          <li>
+            <a href="donate.html" class="nav-btn donate-nav-btn">Donate</a>
+          </li>
+          <li>
+            <a href="browse.html" class="nav-btn browse-nav-btn">Browse</a>
+          </li>
+          <li>
+            <a href="profile.html" class="nav-btn profile-nav-btn">Profile</a>
+          </li>
+          <li>
+            <a href="messages.html" class="nav-btn messages-nav-btn"
+              >Messages</a
+            >
+          </li>
+          <li>
+            <a href="impact.html" class="nav-btn impact-nav-btn"
+              >Impact Board</a
+            >
+          </li>
+          <li>
+            <a href="events.html" class="nav-btn events-nav-btn">Events</a>
+          </li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#" id="logoutBtn" class="nav-btn logout-nav-btn">Logout</a>
+      </div>
+    </nav>
+    <main style="position: relative">
+      <form id="donationForm" class="donation-form card">
+        <div class="form-group">
+          <label for="numClothes"
+            >How many clothes do you want to donate?</label
+          >
+          <select id="numClothes" name="numClothes" required>
+            <option value="">Select</option>
+          </select>
+        </div>
+        <div id="clothesDetails"></div>
+        <!-- Donor info removed: now auto-attached from logged-in user -->
+        <button type="submit" class="main-btn donate-btn" style="display: none">
+          Submit Donation 🎁
+        </button>
+        <div id="successMsg" class="success-message"></div>
+      </form>
+    </main>
+    <footer class="footer">
+      <p>&copy; 2024 ReWear. All rights reserved.</p>
+    </footer>
+    <script src="js/donate.js"></script>
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+      // Full-screen confetti blast on valid submit
+      window.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("donationForm");
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (!form || !submitBtn) return;
+        // Listen for the custom event or success message
+        const origShowSuccess = window.showSuccessMessage;
+        function confettiBlastFullScreen() {
+          confetti({
+            particleCount: 180,
+            spread: 120,
+            origin: { x: 0.5, y: 0.5 },
+            startVelocity: 55,
+            gravity: 0.9,
+            scalar: 1.1,
+            ticks: 90,
+            zIndex: 9999,
+            colors: [
+              "#ff6f91",
+              "#6fcf97",
+              "#56ccf2",
+              "#f2c94c",
+              "#bb6bd9",
+              "#eb5757",
+              "#f2994a",
+            ],
+          });
+          setTimeout(() => confetti.reset(), 1800);
+        }
+        if (typeof origShowSuccess === "function") {
+          window.showSuccessMessage = function (msg) {
+            confettiBlastFullScreen();
+            origShowSuccess.apply(this, arguments);
+          };
+        } else {
+          // fallback: listen for form submit
+          form.addEventListener("submit", function (e) {
+            setTimeout(function () {
+              if (
+                document.getElementById("successMsg") &&
+                document.getElementById("successMsg").textContent.trim()
+              ) {
+                confettiBlastFullScreen();
+              }
+            }, 100);
+          });
+        }
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function () {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "login.html";
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

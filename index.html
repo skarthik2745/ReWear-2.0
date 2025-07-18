@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReWear - Give Clothes a Second Life</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:400,700|Quicksand:400,700|Montserrat:400,600|Caveat:400,600|Lora:400,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body class="gradient-bg">
+    <div class="bg-texture"></div>
+    <nav class="navbar">
+      <div class="nav-left">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-btn home-btn">Home</a></li>
+          <li>
+            <a href="donate.html" class="nav-btn donate-nav-btn">Donate</a>
+          </li>
+          <li>
+            <a href="browse.html" class="nav-btn browse-nav-btn">Browse</a>
+          </li>
+          <li>
+            <a href="profile.html" class="nav-btn profile-nav-btn">Profile</a>
+          </li>
+          <li>
+            <a href="messages.html" class="nav-btn messages-nav-btn"
+              >Messages</a
+            >
+          </li>
+          <li>
+            <a href="impact.html" class="nav-btn impact-nav-btn"
+              >Impact Board</a
+            >
+          </li>
+          <li>
+            <a href="events.html" class="nav-btn events-nav-btn">Events</a>
+          </li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#" id="logoutBtn" class="nav-btn logout-nav-btn">Logout</a>
+      </div>
+    </nav>
+    <div class="top-layout">
+      <div class="left-section">
+        <h1 class="main-title">ReWear</h1>
+        <div class="stats-box">
+          <div class="quick-stats">
+            <span>👕 Clothes Donated: <b>248</b></span>
+            <span>⭐ Top Donor: <b>Jay</b></span>
+            <span>📍 Ongoing Events: <b>4</b></span>
+            <span>👤 Users: <b>1270</b></span>
+          </div>
+        </div>
+        <p class="quote">
+          "A single act of giving can change someone's world."
+        </p>
+      </div>
+      <div class="right-logo">
+        <img
+          src="assets/logo/logo2.jpg"
+          alt="ReWear Logo"
+          class="logo-enhanced"
+        />
+      </div>
+    </div>
+    <section id="hero" class="hero-section fadeIn">
+      <div class="hero-content">
+        <h2 class="welcome-message" id="welcomeMessage">Welcome to ReWear</h2>
+        <p class="hero-tagline">From Your Wardrobe to Someone's World 🌍</p>
+        <div class="hero-btns" id="mainHeroBtns">
+          <a href="donate.html" class="main-btn donate-btn"
+            >I Want to Donate <span>👚</span></a
+          >
+          <a href="browse.html" class="main-btn browse-btn"
+            >Browse Available Clothes <span>👕</span></a
+          >
+        </div>
+        <div class="hero-images">
+          <img
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+            alt="Happy Family"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80"
+            alt="Clothes Folded"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80"
+            alt="Donation Box"
+          />
+        </div>
+      </div>
+    </section>
+    <main>
+      <section id="how" class="how-works fadeIn">
+        <div class="section-bg-fabric"></div>
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <i class="fa-solid fa-hand-holding-heart step-icon"></i>
+            <div>Choose to donate clothes</div>
+          </div>
+          <div class="step">
+            <i class="fa-solid fa-pen-to-square step-icon"></i>
+            <div>Fill in cloth & donor info</div>
+          </div>
+          <div class="step">
+            <i class="fa-solid fa-upload step-icon"></i>
+            <div>Upload and submit</div>
+          </div>
+          <div class="step">
+            <i class="fa-solid fa-shirt step-icon"></i>
+            <div>Clothes visible in Browse</div>
+          </div>
+          <div class="step">
+            <i class="fa-solid fa-people-carry-box step-icon"></i>
+            <div>Someone receives and reuses!</div>
+          </div>
+        </div>
+      </section>
+      <section id="impact" class="impact-testimonials fadeIn">
+        <div class="section-bg-fabric"></div>
+        <div class="impact-counters">
+          <div class="impact-counter">
+            <span class="impact-icon">👚</span>
+            <span class="impact-number" id="impactCount">528</span>
+            <span class="impact-label">Clothes Donated</span>
+          </div>
+          <div class="impact-counter">
+            <span class="impact-icon">💚</span>
+            <span class="impact-number" id="familyCount">120</span>
+            <span class="impact-label">Families Helped</span>
+          </div>
+          <div class="impact-counter">
+            <span class="impact-icon">🌱</span>
+            <span class="impact-number" id="wasteCount">1.2</span>
+            <span class="impact-label">Tons Waste Saved</span>
+          </div>
+        </div>
+      </section>
+      <section id="testimonials" class="testimonials-carousel fadeIn">
+        <h2>What People Say</h2>
+        <div class="carousel">
+          <div class="testimonial-card">
+            <img
+              src="https://randomuser.me/api/portraits/women/44.jpg"
+              alt="Anjali K."
+              class="testimonial-avatar"
+            />
+            <p>“I gave my unused clothes and felt proud to help!”</p>
+            <span>- Anjali K.</span>
+          </div>
+          <div class="testimonial-card">
+            <img
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+              alt="Ravi M."
+              class="testimonial-avatar"
+            />
+            <p>“These clothes brought smiles to our home.”</p>
+            <span>- Ravi M.</span>
+          </div>
+          <div class="testimonial-card">
+            <img
+              src="https://randomuser.me/api/portraits/women/65.jpg"
+              alt="Priya S."
+              class="testimonial-avatar"
+            />
+            <p>“ReWear makes it so easy to donate and make a difference!”</p>
+            <span>- Priya S.</span>
+          </div>
+        </div>
+        <div class="carousel-controls">
+          <button id="prevTestimonial" class="carousel-btn">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button id="nextTestimonial" class="carousel-btn">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+      <section id="contact" class="contact-section fadeIn">
+        <h2>Contact Us</h2>
+        <p>Email: <a href="mailto:hello@rewear.org">hello@rewear.org</a></p>
+        <p>
+          Follow us on <a href="#" target="_blank">Instagram</a> &
+          <a href="#" target="_blank">Facebook</a>
+        </p>
+      </section>
+    </main>
+    <div class="upcoming-events-preview">
+      <h2>Upcoming Events</h2>
+      <div>
+        <div>
+          <b>Chennai Clothes Drive</b><br /><span>May 12</span><br /><span
+            >Volunteers: 30+</span
+          >
+        </div>
+        <div>
+          <b>School Uniform Collection</b><br /><span>May 18</span><br /><span
+            >Volunteers: 15+</span
+          >
+        </div>
+        <div>
+          <b>Green Earth Day</b><br /><span>May 22</span><br /><span
+            >Volunteers: 40+</span
+          >
+        </div>
+        <div>
+          <b>Community Swap Fest</b><br /><span>May 28</span><br /><span
+            >Volunteers: 20+</span
+          >
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <p>&copy; 2024 ReWear. All rights reserved.</p>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Logout functionality
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function () {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "login.html";
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
