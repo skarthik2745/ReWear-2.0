@@ -572,33 +572,39 @@
         background: #fff !important;
         border-radius: 1.5rem !important;
         box-shadow: 0 4px 24px rgba(75, 0, 130, 0.08) !important;
-        padding: 2.5rem 2.5rem 2rem 2.5rem !important;
+        padding: 2.5rem 2rem 2rem 2rem !important;
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
       .badges-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        grid-template-columns: repeat(5, 1fr);
         gap: 1.2rem;
         margin-top: 1rem;
         padding: 1rem;
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .badge-card {
         background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         border-radius: 16px;
         box-shadow: 0 4px 20px rgba(75, 0, 130, 0.08);
-        padding: 1.5rem;
+        padding: 1.2rem;
         text-align: center;
         transition: all 0.3s ease;
         border: 2px solid #f59e0b;
         position: relative;
         cursor: pointer;
-        min-height: 150px;
+        min-height: 140px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        max-width: 100%;
       }
 
       .badge-card:hover {
@@ -720,13 +726,14 @@
       }
 
       /* Responsive design for badges */
-      @media (max-width: 900px) {
+      @media (max-width: 1200px) {
         .user-badges-section {
           padding: 1.5rem 1rem 1rem 1rem;
         }
         .badges-grid {
-          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          grid-template-columns: repeat(5, 1fr);
           gap: 1rem;
+          padding: 0.8rem;
         }
         .badge-card {
           min-height: 120px;
@@ -743,9 +750,33 @@
         }
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 900px) {
+        .user-badges-section {
+          padding: 1.5rem 1rem 1rem 1rem;
+        }
         .badges-grid {
-          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          grid-template-columns: repeat(5, 1fr);
+          gap: 0.8rem;
+          padding: 0.6rem;
+        }
+        .badge-card {
+          min-height: 110px;
+          padding: 0.9rem;
+        }
+        .badge-icon {
+          font-size: 2.2rem;
+        }
+        .badge-name {
+          font-size: 0.95rem;
+        }
+        .badge-condition {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .badges-grid {
+          grid-template-columns: repeat(4, 1fr);
           gap: 0.8rem;
         }
         .badge-card {
@@ -760,6 +791,46 @@
         }
         .badge-condition {
           font-size: 0.7rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .badges-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0.8rem;
+        }
+        .badge-card {
+          min-height: 90px;
+          padding: 0.7rem;
+        }
+        .badge-icon {
+          font-size: 1.8rem;
+        }
+        .badge-name {
+          font-size: 0.85rem;
+        }
+        .badge-condition {
+          font-size: 0.65rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .badges-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.6rem;
+        }
+        .badge-card {
+          min-height: 80px;
+          padding: 0.6rem;
+        }
+        .badge-icon {
+          font-size: 1.6rem;
+        }
+        .badge-name {
+          font-size: 0.8rem;
+        }
+        .badge-condition {
+          font-size: 0.6rem;
         }
       }
 
@@ -790,11 +861,6 @@
           gap: 0.8rem;
           padding: 0.5rem;
         }
-        .badges-grid {
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-          gap: 0.8rem;
-          padding: 0.5rem;
-        }
       }
 
       @media (max-width: 480px) {
@@ -805,11 +871,6 @@
         #userClothesGrid.clothes-grid {
           grid-template-columns: 1fr;
           gap: 0.8rem;
-          padding: 0.5rem;
-        }
-        .badges-grid {
-          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-          gap: 0.6rem;
           padding: 0.5rem;
         }
       }

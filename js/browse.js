@@ -204,34 +204,89 @@ function requestCloth(item) {
         return;
       }
 
-      // Create request
-      const request = {
-        clothId: clothId,
-        clothName: item.name,
-        clothImgData: item.imgData,
-        clothSize: item.size,
-        clothCategory: item.category,
-        clothCondition: item.condition,
-        donorUid: item.donorUid,
-        donorEmail: item.donorEmail,
-        receiverUid: currentUserUid,
-        receiverEmail: currentUser.email,
-        receiverName: currentUser.displayName || currentUser.email,
-        timestamp: new Date().toISOString(),
-        status: "pending",
-      };
+      // Get current user's profile data and donor's profile data
+      const userProfileRef = window.db.ref(`users/${currentUserUid}`);
+      const donorProfileRef = window.db.ref(`users/${item.donorUid}`);
 
-      // Save request to Firebase
-      const newRequestRef = requestsRef.push();
-      newRequestRef
-        .set(request)
-        .then(function () {
-          alert("Your request has been sent to the donor!");
-          modal.style.display = "none";
+      // Fetch both user profiles
+      Promise.all([userProfileRef.once("value"), donorProfileRef.once("value")])
+        .then(function ([userSnapshot, donorSnapshot]) {
+          const userData = userSnapshot.val() || {};
+          const donorData = donorSnapshot.val() || {};
+
+          // Create request with additional user information
+          const request = {
+            clothId: clothId,
+            clothName: item.name,
+            clothImgData: item.imgData,
+            clothSize: item.size,
+            clothCategory: item.category,
+            clothCondition: item.condition,
+            donorUid: item.donorUid,
+            donorEmail: item.donorEmail,
+            donorName:
+              donorData.displayName || donorData.name || item.donorEmail,
+            donorLocation:
+              donorData.location || donorData.address || "Not provided",
+            receiverUid: currentUserUid,
+            receiverEmail: currentUser.email,
+            receiverName: currentUser.displayName || currentUser.email,
+            receiverPhone: userData.phone || "Not provided",
+            receiverLocation:
+              userData.location || userData.address || "Not provided",
+            timestamp: new Date().toISOString(),
+            status: "pending",
+          };
+
+          // Save request to Firebase
+          const newRequestRef = requestsRef.push();
+          newRequestRef
+            .set(request)
+            .then(function () {
+              alert("Your request has been sent to the donor!");
+              modal.style.display = "none";
+            })
+            .catch(function (error) {
+              console.error("Error saving request:", error);
+              alert("Error sending request. Please try again.");
+            });
         })
         .catch(function (error) {
-          console.error("Error saving request:", error);
-          alert("Error sending request. Please try again.");
+          console.error("Error fetching user profiles:", error);
+
+          // Fallback: create request without additional user data
+          const request = {
+            clothId: clothId,
+            clothName: item.name,
+            clothImgData: item.imgData,
+            clothSize: item.size,
+            clothCategory: item.category,
+            clothCondition: item.condition,
+            donorUid: item.donorUid,
+            donorEmail: item.donorEmail,
+            donorName: item.donorEmail,
+            donorLocation: "Not provided",
+            receiverUid: currentUserUid,
+            receiverEmail: currentUser.email,
+            receiverName: currentUser.displayName || currentUser.email,
+            receiverPhone: "Not provided",
+            receiverLocation: "Not provided",
+            timestamp: new Date().toISOString(),
+            status: "pending",
+          };
+
+          // Save request to Firebase
+          const newRequestRef = requestsRef.push();
+          newRequestRef
+            .set(request)
+            .then(function () {
+              alert("Your request has been sent to the donor!");
+              modal.style.display = "none";
+            })
+            .catch(function (error) {
+              console.error("Error saving request:", error);
+              alert("Error sending request. Please try again.");
+            });
         });
     })
     .catch(function (error) {

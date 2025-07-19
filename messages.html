@@ -66,6 +66,50 @@
         <div id="messagesList" class="messages-list"></div>
       </section>
     </main>
+    <!-- Decline Reason Modal -->
+    <div id="declineModal" class="modal" style="display: none">
+      <div class="modal-content" style="max-width: 500px">
+        <div class="modal-header">
+          <h3>Decline Request</h3>
+          <span class="close" id="closeDeclineModal">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p id="declineModalText">
+            Please provide a reason for declining this request:
+          </p>
+          <textarea
+            id="declineReasonInput"
+            placeholder="Enter your reason here...&#10;&#10;Examples:&#10;- Too far to deliver&#10;- Item already given&#10;- Not available anymore&#10;- Other reason"
+            rows="6"
+            style="
+              width: 100%;
+              padding: 12px;
+              border: 1px solid #ddd;
+              border-radius: 8px;
+              font-family: inherit;
+              resize: vertical;
+            "
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button
+            id="submitDeclineBtn"
+            class="main-btn"
+            style="background: #ef4444; color: #fff"
+          >
+            Submit
+          </button>
+          <button
+            id="cancelDeclineBtn"
+            class="main-btn"
+            style="background: #6b7280; color: #fff; margin-left: 10px"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
     <footer class="footer">
       <p>&copy; 2024 ReWear. All rights reserved.</p>
     </footer>
