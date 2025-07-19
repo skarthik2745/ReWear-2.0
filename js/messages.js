@@ -330,12 +330,12 @@ function renderSentMessageCard(request) {
 
   card.style.cssText = cardStyle + "position:relative;";
   card.innerHTML = `
-    <div style="display:flex;align-items:center;gap:1.5rem;position:relative;">
+      <div style="display:flex;align-items:center;gap:1.5rem;position:relative;">
       <img src="${request.clothImgData || "assets/images/placeholder.png"}" 
            class="cloth-img" alt="Cloth Image" 
            style="max-width:80px;max-height:80px;border-radius:1rem;box-shadow:0 2px 8px rgba(59,130,246,0.10);">
-      <div style="flex:1;">
-        <div class="meta">${statusMsg}</div>
+        <div style="flex:1;">
+          <div class="meta">${statusMsg}</div>
         <div class="meta">Donor: <b>${
           request.donorName || request.donorEmail
         }</b></div>
@@ -343,13 +343,13 @@ function renderSentMessageCard(request) {
         <div class="meta">Location: ${
           request.donorLocation || "Not provided"
         }</div>
-        <div class="meta">Requested at: ${new Date(
-          request.timestamp
-        ).toLocaleString()}</div>
+          <div class="meta">Requested at: ${new Date(
+            request.timestamp
+          ).toLocaleString()}</div>
+        </div>
+        ${closeBtn}
       </div>
-      ${closeBtn}
-    </div>
-  `;
+    `;
 
   // X close button for declined or completed requests
   if (

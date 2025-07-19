@@ -54,85 +54,107 @@ function loadLeaderboardData() {
   console.log("Loading leaderboard data from Firebase...");
   showLoadingState("Loading leaderboard data...");
 
-  // First, get all donations from the general donations collection
-  const donationsRef = window.db.ref("donations");
+  // Get all completed requests from the requests collection
+  const requestsRef = window.db.ref("requests");
 
-  donationsRef
+  requestsRef
+    .orderByChild("status")
+    .equalTo("completed")
     .once("value")
-    .then(function (donationsSnapshot) {
-      console.log("Donations snapshot:", donationsSnapshot.val());
+    .then(function (requestsSnapshot) {
+      console.log("Completed requests snapshot:", requestsSnapshot.val());
 
-      // Group donations by donor UID
-      const donationsByUser = {};
+      // Group completed requests by donor
+      const completedDonationsByUser = {};
 
-      if (donationsSnapshot.exists()) {
-        donationsSnapshot.forEach(function (donationSnapshot) {
-          const donation = donationSnapshot.val();
-          const donorUid = donation.donorUid;
+      if (requestsSnapshot.exists()) {
+        requestsSnapshot.forEach(function (requestSnapshot) {
+          const request = requestSnapshot.val();
+          const donorEmail = request.donorEmail;
 
-          if (donorUid) {
-            if (!donationsByUser[donorUid]) {
-              donationsByUser[donorUid] = {
+          if (donorEmail) {
+            if (!completedDonationsByUser[donorEmail]) {
+              completedDonationsByUser[donorEmail] = {
                 count: 0,
-                donations: [],
+                completedRequests: [],
+                donorName: request.donorName || "Anonymous User",
               };
             }
-            donationsByUser[donorUid].count++;
-            donationsByUser[donorUid].donations.push(donation);
+            completedDonationsByUser[donorEmail].count++;
+            completedDonationsByUser[donorEmail].completedRequests.push(
+              request
+            );
           }
         });
       }
 
-      console.log("Donations grouped by user:", donationsByUser);
+      console.log(
+        "Completed donations grouped by user:",
+        completedDonationsByUser
+      );
 
-      // Now get user details for each donor
+      // Get all users to match with completed donations
       const usersRef = window.db.ref("users");
-      const userPromises = Object.keys(donationsByUser).map((donorUid) => {
-        return usersRef
-          .child(donorUid)
-          .once("value")
-          .then(function (userSnapshot) {
-            if (userSnapshot.exists()) {
-              const userData = userSnapshot.val();
-              return {
-                userId: donorUid,
-                name: userData.name || "Anonymous User",
-                email: userData.email || donation.donorEmail || "",
-                donatedCount: donationsByUser[donorUid].count,
+
+      return usersRef.once("value").then(function (usersSnapshot) {
+        const users = [];
+
+        if (usersSnapshot.exists()) {
+          usersSnapshot.forEach(function (userSnapshot) {
+            const userData = userSnapshot.val();
+            const userEmail = userData.email;
+
+            if (userEmail && completedDonationsByUser[userEmail]) {
+              // User has completed donations
+              const completedData = completedDonationsByUser[userEmail];
+              users.push({
+                userId: userSnapshot.key,
+                name:
+                  userData.name || completedData.donorName || "Anonymous User",
+                email: userEmail,
+                donatedCount: completedData.count,
+                completedDonations: completedData.count,
                 profilePic: userData.profilePic || null,
                 lastUpdated: userData.lastUpdated || null,
-                donations: donationsByUser[donorUid].donations,
-              };
-            } else {
-              // User not found, but we have donations
-              const firstDonation = donationsByUser[donorUid].donations[0];
-              return {
-                userId: donorUid,
-                name: "Anonymous User",
-                email: firstDonation.donorEmail || "",
-                donatedCount: donationsByUser[donorUid].count,
-                profilePic: null,
-                lastUpdated: null,
-                donations: donationsByUser[donorUid].donations,
-              };
+                completedRequests: completedData.completedRequests,
+              });
             }
           });
-      });
+        }
 
-      return Promise.all(userPromises);
+        // Also include users who have completed donations but might not be in users collection
+        Object.keys(completedDonationsByUser).forEach((donorEmail) => {
+          const existingUser = users.find((user) => user.email === donorEmail);
+          if (!existingUser) {
+            const completedData = completedDonationsByUser[donorEmail];
+            users.push({
+              userId: null,
+              name: completedData.donorName || "Anonymous User",
+              email: donorEmail,
+              donatedCount: completedData.count,
+              completedDonations: completedData.count,
+              profilePic: null,
+              lastUpdated: null,
+              completedRequests: completedData.completedRequests,
+            });
+          }
+        });
+
+        return users;
+      });
     })
     .then(function (users) {
-      console.log("Users with donations:", users);
+      console.log("Users with completed donations:", users);
 
-      // Filter out users with no donations and calculate badges
+      // Filter out users with no completed donations and calculate badges
       leaderboardData = users
-        .filter((user) => user.donatedCount > 0)
+        .filter((user) => user.completedDonations > 0)
         .map((user) => {
           const badges = BADGE_LEVELS.filter(
-            (badge) => user.donatedCount >= badge.count
+            (badge) => user.completedDonations >= badge.count
           );
           const topBadge = badges.length > 0 ? badges[badges.length - 1] : null;
-          const points = user.donatedCount * 5; // 5 points per donation
+          const points = user.completedDonations * 5; // 5 points per completed donation
 
           return {
             ...user,
@@ -142,13 +164,15 @@ function loadLeaderboardData() {
           };
         });
 
-      // Sort by donation count (descending)
-      leaderboardData.sort((a, b) => b.donatedCount - a.donatedCount);
+      // Sort by completed donations count (descending)
+      leaderboardData.sort(
+        (a, b) => b.completedDonations - a.completedDonations
+      );
 
       // Take top 10
       leaderboardData = leaderboardData.slice(0, 10);
 
-      console.log("Top 10 donors:", leaderboardData);
+      console.log("Top 10 donors with completed donations:", leaderboardData);
 
       // Render the leaderboard
       renderLeaderboard();
@@ -167,21 +191,27 @@ function loadLeaderboardData() {
 function setupRealtimeListener() {
   console.log("Setting up real-time listener...");
 
-  // Listen for changes in the donations collection
-  const donationsRef = window.db.ref("donations");
+  // Listen for changes in the requests collection (for completed donations)
+  const requestsRef = window.db.ref("requests");
 
-  donationsRef.on("child_added", function (snapshot) {
-    console.log("New donation added, refreshing leaderboard...");
-    loadLeaderboardData();
+  requestsRef.on("child_added", function (snapshot) {
+    const request = snapshot.val();
+    if (request.status === "completed") {
+      console.log("New completed donation added, refreshing leaderboard...");
+      loadLeaderboardData();
+    }
   });
 
-  donationsRef.on("child_changed", function (snapshot) {
-    console.log("Donation updated, refreshing leaderboard...");
-    loadLeaderboardData();
+  requestsRef.on("child_changed", function (snapshot) {
+    const request = snapshot.val();
+    if (request.status === "completed") {
+      console.log("Donation marked as completed, refreshing leaderboard...");
+      loadLeaderboardData();
+    }
   });
 
-  donationsRef.on("child_removed", function (snapshot) {
-    console.log("Donation removed, refreshing leaderboard...");
+  requestsRef.on("child_removed", function (snapshot) {
+    console.log("Request removed, refreshing leaderboard...");
     loadLeaderboardData();
   });
 
@@ -254,7 +284,7 @@ function renderLeaderboard() {
         <span class="points-number">${user.points}</span>
       </td>
       <td class="donations-cell">
-        <span class="donations-number">${user.donatedCount}</span>
+        <span class="donations-number">${user.completedDonations}</span>
       </td>
       <td class="badge-cell">
         ${
@@ -361,26 +391,41 @@ document.addEventListener("DOMContentLoaded", function () {
 // Debug function to show current database state
 function debugDatabaseState() {
   console.log("=== DEBUG: Current Database State ===");
-  
-  // Check donations collection
-  const donationsRef = window.db.ref("donations");
-  donationsRef.once("value")
-    .then(function(snapshot) {
-      console.log("Donations collection:", snapshot.val());
-      console.log("Number of donations:", snapshot.numChildren());
+
+  // Check requests collection for completed donations
+  const requestsRef = window.db.ref("requests");
+  requestsRef
+    .orderByChild("status")
+    .equalTo("completed")
+    .once("value")
+    .then(function (snapshot) {
+      console.log("Completed requests collection:", snapshot.val());
+      console.log("Number of completed donations:", snapshot.numChildren());
     })
-    .catch(function(error) {
-      console.error("Error reading donations:", error);
+    .catch(function (error) {
+      console.error("Error reading completed requests:", error);
     });
-  
+
+  // Check all requests collection
+  requestsRef
+    .once("value")
+    .then(function (snapshot) {
+      console.log("All requests collection:", snapshot.val());
+      console.log("Total number of requests:", snapshot.numChildren());
+    })
+    .catch(function (error) {
+      console.error("Error reading all requests:", error);
+    });
+
   // Check users collection
   const usersRef = window.db.ref("users");
-  usersRef.once("value")
-    .then(function(snapshot) {
+  usersRef
+    .once("value")
+    .then(function (snapshot) {
       console.log("Users collection:", snapshot.val());
       console.log("Number of users:", snapshot.numChildren());
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.error("Error reading users:", error);
     });
 }
