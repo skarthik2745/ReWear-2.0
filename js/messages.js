@@ -82,7 +82,6 @@ function renderReceivedMessages() {
           statusSection = `
             <button class="main-btn accept-btn" style="background:#22c55e;color:#fff;margin-right:8px;" disabled>✅ Accepted</button>
             <button class="main-btn decline-btn" style="background:#ef4444;color:#fff;">❌ Decline</button>
-            <button class="main-btn complete-btn" style="background:#059669;color:#fff;margin-left:8px;">🟢 Donation Exchange Successful</button>
           `;
           additionalInfo = `<div class="meta" style="color:#22c55e;font-weight:600;margin-top:8px;">Request accepted. You may contact ${request.receiverName} to arrange pickup.</div>`;
         } else if (request.status === "declined") {
@@ -93,6 +92,9 @@ function renderReceivedMessages() {
         } else if (request.status === "completed") {
           statusSection = `<span style="color:#059669;font-weight:600;">✅ Completed</span>`;
           additionalInfo = `<div class="meta" style="color:#059669;margin-top:8px;">Donation exchange completed successfully!</div>`;
+        } else if (request.status === "failed") {
+          statusSection = `<span style="color:#dc2626;font-weight:600;">❌ Failed</span>`;
+          additionalInfo = `<div class="meta" style="color:#dc2626;margin-top:8px;">Donation was marked as failed by the receiver.</div>`;
         }
 
         // Add X button for declined or completed requests
@@ -147,21 +149,13 @@ function renderReceivedMessages() {
               showDeclineReasonModal(request.requestId, request.clothName);
             };
           }
-
-          // Complete button (only for accepted requests)
-          if (request.status === "accepted") {
-            const completeBtn = card.querySelector(".complete-btn");
-            if (completeBtn) {
-              completeBtn.onclick = function () {
-                completeDonation(request);
-              };
-            }
-          }
         }
 
         // Add event listener for close button
         if (
-          (request.status === "declined" || request.status === "completed") &&
+          (request.status === "declined" ||
+            request.status === "completed" ||
+            request.status === "failed") &&
           card.querySelector(".close-x-btn")
         ) {
           card.querySelector(".close-x-btn").onclick = function () {
@@ -311,6 +305,13 @@ function renderSentMessageCard(request) {
   } else if (request.status === "accepted") {
     statusMsg = `Your request for <b>${request.clothName}</b> has been <span style='color:#22c55e;font-weight:600;'>accepted</span> by <b>${request.donorEmail}</b>. They may contact you soon to arrange pickup.`;
     cardStyle = "border-left: 4px solid #22c55e;";
+    // Add confirmation buttons for receiver
+    closeBtn = `
+      <div class="confirmation-btns">
+        <button class="main-btn success-btn" style="background:#22c55e;color:#fff;margin-right:8px;">✅ Cloth Received Successfully</button>
+        <button class="main-btn failed-btn" style="background:#ef4444;color:#fff;">❌ Donation Failed</button>
+      </div>
+    `;
   } else if (request.status === "declined") {
     statusMsg = `Your request for <b>${request.clothName}</b> was declined by <b>${request.donorEmail}</b>.`;
     if (request.declineReason) {
@@ -319,12 +320,20 @@ function renderSentMessageCard(request) {
     cardStyle = "border-left: 4px solid #ef4444;";
     closeBtn = `<button class="close-x-btn" title="Remove" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.3em;color:#ef4444;cursor:pointer;">&times;</button>`;
   } else if (request.status === "completed") {
-    statusMsg = `Donation marked as completed by <b>${request.donorEmail}</b>. Thank you for using the platform!`;
+    statusMsg = `Donation completed successfully! Thank you for using the platform!`;
     cardStyle = "border-left: 4px solid #059669;";
+  } else if (request.status === "failed") {
+    statusMsg = `Donation was marked as failed. You may try requesting other clothes.`;
+    cardStyle = "border-left: 4px solid #dc2626;";
+    closeBtn = `<button class="close-x-btn" title="Remove" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.3em;color:#ef4444;cursor:pointer;">&times;</button>`;
   }
 
-  // Add X button for declined or completed requests
-  if (request.status === "declined" || request.status === "completed") {
+  // Add X button for declined, completed, or failed requests
+  if (
+    request.status === "declined" ||
+    request.status === "completed" ||
+    request.status === "failed"
+  ) {
     closeBtn = `<button class="close-x-btn" title="Remove" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.3em;color:#ef4444;cursor:pointer;">&times;</button>`;
   }
 
@@ -351,9 +360,31 @@ function renderSentMessageCard(request) {
       </div>
     `;
 
-  // X close button for declined or completed requests
-  if (
-    (request.status === "declined" || request.status === "completed") &&
+  // Event listeners for different button types
+  if (request.status === "accepted") {
+    // Success button (Cloth Received Successfully)
+    const successBtn = card.querySelector(".success-btn");
+    if (successBtn) {
+      successBtn.onclick = function () {
+        if (confirm("Confirm that you have successfully received the cloth?")) {
+          markDonationSuccess(request);
+        }
+      };
+    }
+
+    // Failed button (Donation Failed)
+    const failedBtn = card.querySelector(".failed-btn");
+    if (failedBtn) {
+      failedBtn.onclick = function () {
+        if (confirm("Confirm that the donation has failed?")) {
+          markDonationFailed(request);
+        }
+      };
+    }
+  } else if (
+    (request.status === "declined" ||
+      request.status === "completed" ||
+      request.status === "failed") &&
     card.querySelector(".close-x-btn")
   ) {
     card.querySelector(".close-x-btn").onclick = function () {
@@ -513,17 +544,9 @@ function declineRequest(requestId, reason) {
     });
 }
 
-function completeDonation(request) {
+function markDonationSuccess(request) {
   if (!window.db) {
     alert("Database connection error. Please refresh the page.");
-    return;
-  }
-
-  if (
-    !confirm(
-      `Are you sure you want to mark the donation of "${request.clothName}" as completed? This will remove the item from the database.`
-    )
-  ) {
     return;
   }
 
@@ -533,9 +556,10 @@ function completeDonation(request) {
     .update({
       status: "completed",
       completedAt: new Date().toISOString(),
+      completedBy: "receiver",
     })
     .then(function () {
-      console.log("Request marked as completed");
+      console.log("Donation marked as successful by receiver");
 
       // Delete the cloth from user's donated clothes
       const userDonationsRef = window.db.ref(
@@ -580,12 +604,37 @@ function completeDonation(request) {
           }
         });
 
-      alert("Donation marked as complete. Thank you for making a difference!");
+      alert("Donation completed successfully! Thank you for confirming.");
       loadMessages();
     })
     .catch(function (error) {
-      console.error("Error completing donation:", error);
-      alert("Error completing donation. Please try again.");
+      console.error("Error marking donation success:", error);
+      alert("Error confirming donation. Please try again.");
+    });
+}
+
+function markDonationFailed(request) {
+  if (!window.db) {
+    alert("Database connection error. Please refresh the page.");
+    return;
+  }
+
+  // Update request status to failed
+  const requestRef = window.db.ref(`requests/${request.requestId}`);
+  requestRef
+    .update({
+      status: "failed",
+      failedAt: new Date().toISOString(),
+      failedBy: "receiver",
+    })
+    .then(function () {
+      console.log("Donation marked as failed by receiver");
+      alert("Donation marked as failed. You may try requesting other clothes.");
+      loadMessages();
+    })
+    .catch(function (error) {
+      console.error("Error marking donation failed:", error);
+      alert("Error marking donation as failed. Please try again.");
     });
 }
 

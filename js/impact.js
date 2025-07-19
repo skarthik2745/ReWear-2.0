@@ -204,8 +204,8 @@ function setupRealtimeListener() {
 
   requestsRef.on("child_changed", function (snapshot) {
     const request = snapshot.val();
-    if (request.status === "completed") {
-      console.log("Donation marked as completed, refreshing leaderboard...");
+    if (request.status === "completed" || request.status === "failed") {
+      console.log("Donation status changed, refreshing leaderboard...");
       loadLeaderboardData();
     }
   });

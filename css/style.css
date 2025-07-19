@@ -3092,3 +3092,21 @@ main {
   border-radius: 16px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
+
+/* Confirmation buttons alignment for receiver in messages */
+.message-card .confirmation-btns {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .message-card .confirmation-btns {
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: stretch;
+  }
+}
