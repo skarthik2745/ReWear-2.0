@@ -10,6 +10,24 @@
       rel="stylesheet"
     />
     <style>
+      /* CSS Reset for donated clothes section */
+      #userClothesGrid,
+      #userClothesGrid *,
+      #userClothesGrid *::before,
+      #userClothesGrid *::after {
+        box-sizing: border-box;
+      }
+
+      #userClothesGrid .cloth-card {
+        all: unset;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+
+      #userClothesGrid .cloth-card * {
+        all: unset;
+      }
+
       body.gradient-bg {
         background: linear-gradient(
           135deg,
@@ -70,16 +88,19 @@
       main {
         flex: 1;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         min-height: 70vh;
+        padding: 2rem 1rem;
+        gap: 2rem;
       }
       .profile-section.card {
         background: #fff;
         border-radius: 1.5rem;
         box-shadow: 0 4px 24px rgba(75, 0, 130, 0.08);
         padding: 2.5rem 2.5rem 2rem 2.5rem;
-        max-width: 420px;
+        max-width: 1200px;
         width: 100%;
         margin: 0 auto;
         display: flex;
@@ -185,69 +206,860 @@
         box-shadow: 0 4px 16px rgba(75, 0, 130, 0.15);
       }
       .donated-clothes-section {
-        margin-top: 2rem;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .section-header h3 {
+        color: #4b0082;
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-weight: 700;
+      }
+
+      .section-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+        margin: 0;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+      }
+
+      #userClothesGrid.clothes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+        padding: 1rem;
         width: 100%;
       }
-      .donated-clothes-section h3 {
-        color: #4b0082;
-        font-size: 1.3rem;
+
+      #userClothesGrid .cloth-card {
+        background: #fff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(75, 0, 130, 0.08) !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+        border: 1px solid #e6e6fa !important;
+        position: relative !important;
+        cursor: pointer !important;
+        max-width: 100% !important;
+        min-height: 500px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      #userClothesGrid .cloth-card:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 8px 30px rgba(75, 0, 130, 0.15) !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-img {
+        width: 100% !important;
+        height: 180px !important;
+        object-fit: cover !important;
+        border-bottom: 1px solid #e6e6fa !important;
+        display: block !important;
+        flex-shrink: 0 !important;
+      }
+
+      #userClothesGrid .cloth-card:hover .cloth-img {
+        transform: none !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-info {
+        padding: 1.5rem !important;
+        font-family: "Poppins", "Segoe UI", sans-serif !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        min-height: 280px !important;
+        background: #fff !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-info h3 {
+        color: #4b0082 !important;
+        font-size: 1.4rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 1.2rem !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        margin-top: 0 !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-meta {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem !important;
+        margin-bottom: 1.2rem !important;
+        flex: 1 !important;
+      }
+
+      #userClothesGrid .cloth-card .meta-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.8rem !important;
+        font-size: 1rem !important;
+        color: #6b7280 !important;
+        padding: 0.4rem 0 !important;
+        border-bottom: 1px solid #f3f4f6 !important;
+        width: 100% !important;
+      }
+
+      #userClothesGrid .cloth-card .meta-item:last-child {
+        border-bottom: none !important;
+      }
+
+      #userClothesGrid .cloth-card .meta-item .icon {
+        font-size: 1.2rem !important;
+        width: 24px !important;
+        text-align: center !important;
+        flex-shrink: 0 !important;
+      }
+
+      #userClothesGrid .cloth-card .meta-item .label {
+        font-weight: 600 !important;
+        color: #4b0082 !important;
+        min-width: 90px !important;
+        flex-shrink: 0 !important;
+      }
+
+      #userClothesGrid .cloth-card .meta-item .value {
+        color: #374151 !important;
+        font-weight: 500 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        flex: 1 !important;
+      }
+
+      #userClothesGrid .cloth-card .donation-date {
+        background: linear-gradient(135deg, #e6e6fa, #d1c4e9) !important;
+        color: #4b0082 !important;
+        padding: 0.8rem 1.2rem !important;
+        border-radius: 20px !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        margin: 1.2rem 0 !important;
+        font-family: "Poppins", "Segoe UI", sans-serif !important;
+        flex-shrink: 0 !important;
+        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.1) !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-actions {
+        display: flex !important;
+        gap: 1rem !important;
+        margin-top: auto !important;
+        padding-top: 1.2rem !important;
+        border-top: 2px solid #e6e6fa !important;
+        flex-shrink: 0 !important;
+      }
+
+      #userClothesGrid .cloth-card .main-btn {
+        flex: 1 !important;
+        background: #4b0082 !important;
+        color: #fff !important;
+        border-radius: 12px !important;
+        font-size: 1rem !important;
+        padding: 0.8rem 1.2rem !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        font-weight: 600 !important;
+        font-family: "Poppins", "Segoe UI", sans-serif !important;
+        text-align: center !important;
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.1) !important;
+        text-decoration: none !important;
+      }
+
+      #userClothesGrid .cloth-card .edit-btn {
+        background: #e6e6fa !important;
+        color: #4b0082 !important;
+      }
+
+      #userClothesGrid .cloth-card .edit-btn:hover {
+        background: #d1c4e9 !important;
+        color: #fff !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(75, 0, 130, 0.2) !important;
+      }
+
+      #userClothesGrid .cloth-card .delete-btn {
+        background: #ef4444 !important;
+        color: #fff !important;
+      }
+
+      #userClothesGrid .cloth-card .delete-btn:hover {
+        background: #dc2626 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+      }
+
+      /* Override any conflicting styles from other CSS files */
+      .cloth-card {
+        background: #fff !important;
+        border: 1px solid #e6e6fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(75, 0, 130, 0.08) !important;
+      }
+
+      /* Ensure proper display for all card elements */
+      #userClothesGrid .cloth-card,
+      #userClothesGrid .cloth-card .cloth-info,
+      #userClothesGrid .cloth-card .cloth-meta,
+      #userClothesGrid .cloth-card .meta-item,
+      #userClothesGrid .cloth-card .cloth-actions {
+        display: flex !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-img {
+        display: block !important;
+      }
+
+      #userClothesGrid .cloth-card .cloth-info h3,
+      #userClothesGrid .cloth-card .donation-date {
+        display: block !important;
+      }
+
+      /* Edit Modal Styles - Force visibility */
+      #editClothModal {
+        position: fixed !important;
+        z-index: 999999 !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        display: none !important;
+        justify-content: center !important;
+        align-items: center !important;
+        font-family: "Poppins", "Segoe UI", sans-serif !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      #editClothModal.show {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+
+      #editClothModal .modal-content {
+        background-color: #fff !important;
+        margin: auto !important;
+        padding: 2rem !important;
+        border-radius: 16px !important;
+        width: 90% !important;
+        max-width: 500px !important;
+        position: relative !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+        transform: scale(1) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      #editClothModal .close-btn {
+        position: absolute !important;
+        right: 1rem !important;
+        top: 1rem !important;
+        font-size: 2rem !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        color: #666 !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 1000 !important;
+      }
+
+      #editClothModal .close-btn:hover {
+        color: #000 !important;
+      }
+
+      #editClothModal h2 {
+        margin-bottom: 1.5rem !important;
+        color: #4b0082 !important;
+        text-align: center !important;
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+      }
+
+      #editClothModal .form-group {
+        margin-bottom: 1rem !important;
+      }
+
+      #editClothModal label {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        font-weight: 600 !important;
+        color: #4b0082 !important;
+        font-size: 0.9rem !important;
+      }
+
+      #editClothModal input,
+      #editClothModal select {
+        width: 100% !important;
+        padding: 0.8rem !important;
+        border: 2px solid #e6e6fa !important;
+        border-radius: 8px !important;
+        font-size: 1rem !important;
+        transition: border-color 0.3s ease !important;
+        background: #fff !important;
+        color: #333 !important;
+        box-sizing: border-box !important;
+      }
+
+      #editClothModal input:focus,
+      #editClothModal select:focus {
+        outline: none !important;
+        border-color: #4b0082 !important;
+        box-shadow: 0 0 0 3px rgba(75, 0, 130, 0.1) !important;
+      }
+
+      #editClothModal button[type="submit"] {
+        background: #4b0082 !important;
+        color: #fff !important;
+        padding: 1rem 2rem !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        margin-top: 1rem !important;
+        transition: background-color 0.3s ease !important;
+      }
+
+      #editClothModal button[type="submit"]:hover {
+        background: #3a0066 !important;
+      }
+
+      #editClothModal button[type="submit"]:disabled {
+        background: #ccc !important;
+        cursor: not-allowed !important;
+      }
+
+      /* User Badges Section Styles */
+      .user-badges-section {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff !important;
+        border-radius: 1.5rem !important;
+        box-shadow: 0 4px 24px rgba(75, 0, 130, 0.08) !important;
+        padding: 2.5rem 2.5rem 2rem 2.5rem !important;
+      }
+
+      .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.2rem;
+        margin-top: 1rem;
+        padding: 1rem;
+        width: 100%;
+      }
+
+      .badge-card {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(75, 0, 130, 0.08);
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid #f59e0b;
+        position: relative;
+        cursor: pointer;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .badge-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(75, 0, 130, 0.15);
+        border-color: #d97706;
+      }
+
+      .badge-card.earned {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border-color: #059669;
+        animation: badgeGlow 2s ease-in-out infinite alternate;
+      }
+
+      .badge-card.not-earned {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        border-color: #9ca3af;
+        opacity: 0.6;
+        filter: grayscale(50%);
+      }
+
+      .badge-card.not-earned:hover {
+        opacity: 0.8;
+        filter: grayscale(30%);
+      }
+
+      .badge-icon {
+        font-size: 3rem;
         margin-bottom: 1rem;
+        display: block;
+      }
+
+      .badge-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #92400e;
+        margin-bottom: 0.5rem;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+      }
+
+      .badge-card.earned .badge-name {
+        color: #065f46;
+      }
+
+      .badge-card.not-earned .badge-name {
+        color: #6b7280;
+      }
+
+      .badge-condition {
+        font-size: 0.9rem;
+        color: #92400e;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+      }
+
+      .badge-card.earned .badge-condition {
+        color: #065f46;
+      }
+
+      .badge-card.not-earned .badge-condition {
+        color: #9ca3af;
+      }
+
+      .badge-progress {
+        width: 100%;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+
+      .badge-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #059669);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+
+      .badge-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1f2937;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        margin-bottom: 0.5rem;
+      }
+
+      .badge-tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top-color: #1f2937;
+      }
+
+      .badge-card:hover .badge-tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      @keyframes badgeGlow {
+        0% {
+          box-shadow: 0 4px 20px rgba(75, 0, 130, 0.08);
+        }
+        100% {
+          box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
+        }
+      }
+
+      /* Responsive design for badges */
+      @media (max-width: 900px) {
+        .user-badges-section {
+          padding: 1.5rem 1rem 1rem 1rem;
+        }
+        .badges-grid {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 1rem;
+        }
+        .badge-card {
+          min-height: 120px;
+          padding: 1rem;
+        }
+        .badge-icon {
+          font-size: 2.5rem;
+        }
+        .badge-name {
+          font-size: 1rem;
+        }
+        .badge-condition {
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .badges-grid {
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 0.8rem;
+        }
+        .badge-card {
+          min-height: 100px;
+          padding: 0.8rem;
+        }
+        .badge-icon {
+          font-size: 2rem;
+        }
+        .badge-name {
+          font-size: 0.9rem;
+        }
+        .badge-condition {
+          font-size: 0.7rem;
+        }
+      }
+
+      /* Responsive design for main layout */
+      @media (max-width: 1200px) {
+        main {
+          padding: 1.5rem 1rem;
+          gap: 1.5rem;
+        }
+        .profile-section.card,
+        .donated-clothes-section,
+        .user-badges-section {
+          max-width: 100%;
+        }
+        #userClothesGrid.clothes-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        main {
+          padding: 1rem 0.5rem;
+          gap: 1rem;
+        }
+        #userClothesGrid.clothes-grid {
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 0.8rem;
+          padding: 0.5rem;
+        }
+        .badges-grid {
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          gap: 0.8rem;
+          padding: 0.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        main {
+          padding: 0.5rem;
+          gap: 0.8rem;
+        }
+        #userClothesGrid.clothes-grid {
+          grid-template-columns: 1fr;
+          gap: 0.8rem;
+          padding: 0.5rem;
+        }
+        .badges-grid {
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 0.6rem;
+          padding: 0.5rem;
+        }
+      }
+
+      #editClothImgPreview {
+        width: 100% !important;
+        height: 200px !important;
+        object-fit: cover !important;
+        border-radius: 8px !important;
+        margin-top: 0.5rem !important;
+        border: 2px solid #e6e6fa !important;
+        display: block !important;
+      }
+
+      /* Override any conflicting modal styles */
+      .modal {
+        position: fixed !important;
+        z-index: 99999 !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        display: none !important;
+        justify-content: center !important;
+        align-items: center !important;
+      }
+
+      .modal-content {
+        background-color: #fff !important;
+        margin: auto !important;
+        padding: 2rem !important;
+        border-radius: 16px !important;
+        width: 90% !important;
+        max-width: 500px !important;
+        position: relative !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+      }
+
+      /* Loading and error states for better UX */
+      .loading-state {
+        text-align: center;
+        padding: 2rem;
+        color: #6b7280;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e6e6fa;
+        border-top: 4px solid #4b0082;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+      }
+
+      .empty-state .icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .empty-state h4 {
+        color: #4b0082;
+        margin-bottom: 0.5rem;
+      }
+
+      .empty-state p {
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      /* Animations */
+      .fadeIn {
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .cloth-card {
+        animation: fadeInUp 0.6s ease-out;
+        animation-fill-mode: both;
+      }
+
+      .cloth-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .cloth-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .cloth-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .cloth-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .cloth-card:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+      .cloth-card:nth-child(6) {
+        animation-delay: 0.6s;
+      }
+
+      /* Modal styling */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+      }
+
+      .modal-content {
+        background: #fff;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(75, 0, 130, 0.15);
+        border: 1px solid #e6e6fa;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .modal-content h2 {
+        color: #4b0082;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
         text-align: center;
         font-family: "Poppins", "Segoe UI", sans-serif;
       }
-      #userClothesGrid.clothes-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
+
+      .modal-content .form-group {
+        margin-bottom: 1.2rem;
       }
-      .cloth-card {
-        background: #fff;
-        border-radius: 1rem;
-        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.08);
-        overflow: hidden;
-        transition: transform 0.2s, box-shadow 0.2s;
-        border: 1px solid #e6e6fa;
-      }
-      .cloth-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(75, 0, 130, 0.12);
-      }
-      .cloth-card .cloth-img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-bottom: 1px solid #e6e6fa;
-      }
-      .cloth-info {
-        padding: 1rem;
+
+      .modal-content label {
+        color: #4b0082;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: block;
         font-family: "Poppins", "Segoe UI", sans-serif;
       }
-      .cloth-card .main-btn {
+
+      .modal-content input,
+      .modal-content select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        border: 1.5px solid #e6e6fa;
+        background: #f8f8ff;
+        color: #4b0082;
+        font-size: 1rem;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        box-shadow: 0 2px 8px rgba(75, 0, 130, 0.08);
+        outline: none;
+        transition: border 0.2s, box-shadow 0.2s;
+      }
+
+      .modal-content input:focus,
+      .modal-content select:focus {
+        border: 2px solid #4b0082;
+        box-shadow: 0 2px 12px rgba(75, 0, 130, 0.15);
+      }
+
+      .modal-content .main-btn {
         background: #4b0082;
         color: #fff;
-        border-radius: 0.8rem;
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        margin-top: 0.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+        margin-top: 1rem;
         border: none;
         cursor: pointer;
-        transition: background 0.18s;
+        transition: all 0.3s ease;
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        box-shadow: 0 4px 12px rgba(75, 0, 130, 0.15);
+        width: 100%;
       }
-      .cloth-card .edit-btn {
-        background: #e6e6fa;
+
+      .modal-content .main-btn:hover {
+        background: #3d2461;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(75, 0, 130, 0.2);
+      }
+
+      .modal-content .main-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #6b7280;
+        cursor: pointer;
+        transition: color 0.2s;
+        line-height: 1;
+      }
+
+      .close-btn:hover {
         color: #4b0082;
-        margin-right: 0.5rem;
-      }
-      .cloth-card .edit-btn:hover {
-        background: #d1c4e9;
-      }
-      .cloth-card .delete-btn {
-        background: #ffa07a;
-        color: #fff;
-      }
-      .cloth-card .delete-btn:hover {
-        background: #ff7f50;
       }
       @media (max-width: 900px) {
         .profile-section {
@@ -256,9 +1068,22 @@
         }
         .donated-clothes-section {
           margin-top: 1.5rem;
+          margin-left: 1rem;
+          margin-right: 1rem;
         }
         #userClothesGrid.clothes-grid {
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          grid-template-columns: repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+          ) !important;
+          gap: 1.5rem !important;
+          padding: 0.5rem !important;
+        }
+        #userClothesGrid .cloth-card {
+          min-height: 480px !important;
+        }
+        #userClothesGrid .cloth-card .cloth-info {
+          min-height: 260px !important;
         }
         .filter-bar {
           flex-direction: column;
@@ -277,16 +1102,55 @@
         }
         .donated-clothes-section {
           margin-top: 1rem;
+          margin-left: 0.5rem;
+          margin-right: 0.5rem;
+        }
+        .section-header h3 {
+          font-size: 1.5rem;
         }
         #userClothesGrid.clothes-grid {
-          grid-template-columns: 1fr;
-          gap: 0.8rem;
+          grid-template-columns: 1fr !important;
+          gap: 1rem !important;
+          padding: 0.5rem !important;
         }
-        .cloth-card {
-          margin: 0;
+        #userClothesGrid .cloth-card {
+          margin: 0 !important;
+          min-height: 450px !important;
         }
-        .cloth-card .cloth-img {
-          height: 120px;
+        #userClothesGrid .cloth-card .cloth-img {
+          height: 160px !important;
+        }
+        #userClothesGrid .cloth-card .cloth-info {
+          padding: 1.2rem !important;
+          min-height: 250px !important;
+        }
+        #userClothesGrid .cloth-card .cloth-meta {
+          gap: 0.8rem !important;
+        }
+        #userClothesGrid .cloth-card .meta-item {
+          font-size: 0.95rem !important;
+          gap: 0.6rem !important;
+        }
+        #userClothesGrid .cloth-card .meta-item .icon {
+          font-size: 1.1rem !important;
+          width: 20px !important;
+        }
+        #userClothesGrid .cloth-card .meta-item .label {
+          min-width: 80px !important;
+        }
+        #userClothesGrid .cloth-card .cloth-actions {
+          flex-direction: row !important;
+          gap: 0.8rem !important;
+        }
+        #userClothesGrid .cloth-card .main-btn {
+          font-size: 0.9rem !important;
+          padding: 0.7rem 1rem !important;
+          min-height: 44px !important;
+        }
+        #userClothesGrid .cloth-card .donation-date {
+          padding: 0.6rem 1rem !important;
+          font-size: 0.85rem !important;
+          margin: 1rem 0 !important;
         }
         .filter-bar {
           padding: 0.8rem;
@@ -376,18 +1240,48 @@
               <label>Address</label
               ><input type="text" id="profileAddress" required />
             </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" id="profileDob" required />
+            </div>
             <button type="submit" class="main-btn">Save Profile</button>
           </form>
         </div>
       </section>
-      <!-- Removed donated clothes section as per user request -->
+
+      <!-- Donated Clothes Section -->
+      <section class="donated-clothes-section card">
+        <div class="section-header">
+          <h3>🛍️ My Donated Clothes</h3>
+          <p class="section-subtitle">
+            Track all the clothes you've donated to help others
+          </p>
+        </div>
+        <div id="userClothesGrid" class="clothes-grid">
+          <!-- Clothes cards will be dynamically loaded here -->
+        </div>
+      </section>
+
+      <!-- User Badges Section -->
+      <section class="user-badges-section card">
+        <div class="section-header">
+          <h3>🏅 Your Badges</h3>
+          <p class="section-subtitle">
+            Badges earned based on your donation milestones
+          </p>
+        </div>
+        <div id="userBadgesGrid" class="badges-grid">
+          <!-- Badges will be dynamically loaded here -->
+        </div>
+      </section>
     </main>
     <footer class="footer">
       <p>&copy; 2024 ReWear. All rights reserved.</p>
     </footer>
-    <script src="js/profile.js"></script>
-    <div id="editClothModal" class="modal" style="display: none">
-      <div class="modal-content" style="max-width: 400px; width: 98vw">
+
+    <!-- Edit Cloth Modal -->
+    <div id="editClothModal" class="modal">
+      <div class="modal-content">
         <span class="close-btn" id="closeEditModal">&times;</span>
         <form id="editClothForm">
           <h2>Edit Cloth</h2>
@@ -436,14 +1330,32 @@
         </form>
       </div>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/profile.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", function () {
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.href = "login.html";
+            // Sign out from Firebase
+            if (window.auth) {
+              window.auth
+                .signOut()
+                .then(function () {
+                  console.log("User signed out successfully");
+                  window.location.href = "login.html";
+                })
+                .catch(function (error) {
+                  console.error("Error signing out:", error);
+                  window.location.href = "login.html";
+                });
+            } else {
+              window.location.href = "login.html";
+            }
           });
         }
       });

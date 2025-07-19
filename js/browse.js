@@ -12,9 +12,53 @@ const filterCondition = document.getElementById("filterCondition");
 const filterLocation = document.getElementById("filterLocation");
 
 let allDonations = [];
+let currentUser = null;
+let currentUserUid = null;
+
+// Check authentication state
+window.auth.onAuthStateChanged(function (firebaseUser) {
+  console.log("Auth state changed in browse page:", firebaseUser);
+  if (firebaseUser) {
+    currentUser = firebaseUser;
+    currentUserUid = firebaseUser.uid;
+    console.log("User logged in:", currentUserUid);
+  } else {
+    console.log("No user logged in");
+    currentUser = null;
+    currentUserUid = null;
+  }
+});
 
 function loadDonations() {
-  allDonations = JSON.parse(localStorage.getItem("reware_donations") || "[]");
+  if (!window.db) {
+    console.error("Firebase database not available");
+    allDonations = [];
+    return;
+  }
+
+  const donationsRef = window.db.ref("donations");
+
+  donationsRef
+    .once("value")
+    .then(function (snapshot) {
+      allDonations = [];
+
+      if (snapshot.exists()) {
+        snapshot.forEach(function (childSnapshot) {
+          const donationData = childSnapshot.val();
+          donationData.key = childSnapshot.key; // Add Firebase key for reference
+          allDonations.push(donationData);
+        });
+      }
+
+      console.log("Donations loaded from Firebase:", allDonations.length);
+      renderClothes();
+    })
+    .catch(function (error) {
+      console.error("Error loading donations:", error);
+      allDonations = [];
+      renderClothes();
+    });
 }
 
 function filterDonations() {
@@ -37,11 +81,11 @@ function filterDonations() {
     // Condition
     if (filterCondition.value && item.condition !== filterCondition.value)
       return false;
-    // Location (address)
+    // Location (address) - check if donor info exists
     if (
       filterLocation.value &&
-      (!item.donor ||
-        !item.donor.address
+      (!item.donorEmail ||
+        !item.donorEmail
           .toLowerCase()
           .includes(filterLocation.value.toLowerCase()))
     )
@@ -71,6 +115,9 @@ function renderClothes() {
         <div class="meta">Category: ${item.category}</div>
         <div class="meta">Size: ${item.size}</div>
         <div class="meta">Condition: ${item.condition}</div>
+        <div class="meta">Donated: ${new Date(
+          item.donatedAt
+        ).toLocaleDateString()}</div>
       </div>
     `;
     card.addEventListener("click", () => showModal(item));
@@ -79,19 +126,18 @@ function renderClothes() {
 }
 
 function showModal(item) {
-  // Get logged-in user
-  const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
   // Only show Request button if user is logged in and not the donor
   let showRequestBtn = false;
   if (
-    user &&
-    user.email &&
-    item.donor &&
-    item.donor.email &&
-    user.email.trim().toLowerCase() !== item.donor.email.trim().toLowerCase()
+    currentUser &&
+    currentUser.email &&
+    item.donorEmail &&
+    currentUser.email.trim().toLowerCase() !==
+      item.donorEmail.trim().toLowerCase()
   ) {
     showRequestBtn = true;
   }
+
   modalDetails.innerHTML = `
     <div class="modal-left">
       <div class="modal-section">
@@ -100,6 +146,7 @@ function showModal(item) {
         <p><b>Category:</b> ${item.category}</p>
         <p><b>Condition:</b> ${item.condition}</p>
         <p><b>Size:</b> ${item.size}</p>
+        <p><b>Donated:</b> ${new Date(item.donatedAt).toLocaleDateString()}</p>
       </div>
     </div>
     <div class="modal-divider"></div>
@@ -116,58 +163,88 @@ function showModal(item) {
   `;
   modal.style.display = "flex";
   modal.querySelector(".modal-content").classList.add("fadeIn");
+
   // Add handler for Request button
   if (showRequestBtn) {
     const requestBtn = document.getElementById("requestClothBtn");
     requestBtn.onclick = function () {
-      // Prevent duplicate requests
-      let messages = JSON.parse(
-        localStorage.getItem("reware_messages") || "[]"
-      );
-      const alreadyRequested = messages.some(
-        (msg) =>
-          msg.clothId ===
-            item.name + "_" + item.size + "_" + item.donor.email &&
-          msg.receiver &&
-          msg.receiver.email === user.email
-      );
+      requestCloth(item);
+    };
+  }
+}
+
+function requestCloth(item) {
+  if (!currentUser || !currentUserUid) {
+    alert("You must be logged in to request clothes.");
+    return;
+  }
+
+  if (!window.db) {
+    alert("Database connection error. Please refresh the page.");
+    return;
+  }
+
+  // Check if already requested
+  const requestsRef = window.db.ref("requests");
+  const clothId = item.key; // Use Firebase key as unique identifier
+
+  requestsRef
+    .orderByChild("clothId")
+    .equalTo(clothId)
+    .once("value")
+    .then(function (snapshot) {
+      const alreadyRequested =
+        snapshot.exists() &&
+        Object.values(snapshot.val()).some(
+          (request) => request.receiverUid === currentUserUid
+        );
+
       if (alreadyRequested) {
         alert("You have already requested this cloth.");
         return;
       }
-      // Build message
-      const message = {
-        id: Date.now() + "_" + Math.random().toString(36).slice(2),
-        donorEmail: item.donor.email,
-        receiver: {
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-        },
-        cloth: {
-          name: item.name,
-          imgData: item.imgData,
-          size: item.size,
-          category: item.category,
-          condition: item.condition,
-        },
-        clothId: item.name + "_" + item.size + "_" + item.donor.email,
+
+      // Create request
+      const request = {
+        clothId: clothId,
+        clothName: item.name,
+        clothImgData: item.imgData,
+        clothSize: item.size,
+        clothCategory: item.category,
+        clothCondition: item.condition,
+        donorUid: item.donorUid,
+        donorEmail: item.donorEmail,
+        receiverUid: currentUserUid,
+        receiverEmail: currentUser.email,
+        receiverName: currentUser.displayName || currentUser.email,
         timestamp: new Date().toISOString(),
         status: "pending",
       };
-      messages.push(message);
-      localStorage.setItem("reware_messages", JSON.stringify(messages));
-      alert("Your request has been sent to the donor!");
-      modal.style.display = "none";
-    };
-  }
+
+      // Save request to Firebase
+      const newRequestRef = requestsRef.push();
+      newRequestRef
+        .set(request)
+        .then(function () {
+          alert("Your request has been sent to the donor!");
+          modal.style.display = "none";
+        })
+        .catch(function (error) {
+          console.error("Error saving request:", error);
+          alert("Error sending request. Please try again.");
+        });
+    })
+    .catch(function (error) {
+      console.error("Error checking existing requests:", error);
+      alert("Error checking request status. Please try again.");
+    });
 }
 
 closeBtn.onclick = function () {
   modal.style.display = "none";
   modal.querySelector(".modal-content").classList.remove("fadeIn");
 };
+
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
@@ -186,11 +263,17 @@ window.onclick = function (event) {
   input.addEventListener("change", renderClothes);
 });
 
+// Initialize page
 window.addEventListener("DOMContentLoaded", () => {
+  console.log("Browse page loaded");
   loadDonations();
-  renderClothes();
 });
-window.addEventListener("reware_donations_updated", () => {
-  loadDonations();
-  renderClothes();
-});
+
+// Listen for real-time updates
+if (window.db) {
+  const donationsRef = window.db.ref("donations");
+  donationsRef.on("value", function (snapshot) {
+    console.log("Donations updated in real-time");
+    loadDonations();
+  });
+}

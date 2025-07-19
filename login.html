@@ -18,17 +18,18 @@
         <form id="loginForm" autocomplete="off">
           <div class="form-group">
             <label for="loginEmail">Email or Full Name</label>
-            <input type="text" id="loginEmail" required />
+            <input type="email" id="email" required />
           </div>
           <div class="form-group">
             <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" required minlength="6" />
+            <input type="password" id="password" required minlength="6" />
           </div>
           <div style="text-align: right; margin-bottom: 0.7rem">
             <a href="forgot-password.html" class="forgot-link"
               >Forgot Password?</a
             >
           </div>
+          <div id="loginMsg" style="margin: 10px 0; color: #d32f2f"></div>
           <button type="submit" class="main-btn">Login</button>
           <p class="auth-switch">
             Don't have an account? <a href="register.html">Register</a>
@@ -36,6 +37,10 @@
         </form>
       </div>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="js/firebase.js"></script>
     <script src="js/login.js"></script>
   </body>
 </html>

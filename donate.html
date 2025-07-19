@@ -172,6 +172,144 @@
           font-size: clamp(1.1rem, 4vw, 2.2rem);
         }
       }
+
+      /* Dynamic form cards styling */
+      #clothesDetails .card {
+        background: #fff7fa;
+        border: 2px solid #ffb6c1;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 12px rgba(255, 182, 193, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+
+      #clothesDetails .card::before {
+        content: "👕";
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 2rem;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      #clothesDetails .card h3 {
+        color: #d6336c;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        text-align: center;
+        background: linear-gradient(90deg, #ff6f91, #d6336c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      #clothesDetails .card .form-group {
+        margin-bottom: 1.2rem;
+      }
+
+      #clothesDetails .card .form-group label {
+        color: #d6336c;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      #clothesDetails .card .form-group input,
+      #clothesDetails .card .form-group select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1.5px solid #ffb6c1;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      #clothesDetails .card .form-group input:focus,
+      #clothesDetails .card .form-group select:focus {
+        border-color: #ff6f91;
+        box-shadow: 0 0 0 3px rgba(255, 111, 145, 0.1);
+        outline: none;
+      }
+
+      #clothesDetails .card .form-group input[type="file"] {
+        padding: 0.6rem;
+        background: #fff7fa;
+        border: 2px dashed #ffb6c1;
+        cursor: pointer;
+      }
+
+      #clothesDetails .card .form-group input[type="file"]:hover {
+        border-color: #ff6f91;
+        background: #ffe3ee;
+      }
+
+      .img-preview {
+        border: 2px solid #ffb6c1;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(255, 182, 193, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .img-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 182, 193, 0.3);
+      }
+
+      /* Submit button enhancements */
+      .main-btn.donate-btn {
+        background: linear-gradient(135deg, #ff6f91, #d6336c);
+        border: none;
+        color: white;
+        font-weight: 700;
+        border-radius: 2rem;
+        box-shadow: 0 4px 15px rgba(255, 111, 145, 0.3);
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .main-btn.donate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 111, 145, 0.4);
+      }
+
+      .main-btn.donate-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Loading animation for submit button */
+      .main-btn.donate-btn:disabled::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid transparent;
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     </style>
   </head>
   <body class="gradient-bg">
@@ -229,6 +367,10 @@
     <footer class="footer">
       <p>&copy; 2024 ReWear. All rights reserved.</p>
     </footer>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="js/firebase.js"></script>
     <script src="js/donate.js"></script>
     <!-- Canvas Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -287,9 +429,21 @@
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", function () {
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.href = "login.html";
+            // Sign out from Firebase
+            if (window.auth) {
+              window.auth
+                .signOut()
+                .then(function () {
+                  console.log("User signed out successfully");
+                  window.location.href = "login.html";
+                })
+                .catch(function (error) {
+                  console.error("Error signing out:", error);
+                  window.location.href = "login.html";
+                });
+            } else {
+              window.location.href = "login.html";
+            }
           });
         }
       });
