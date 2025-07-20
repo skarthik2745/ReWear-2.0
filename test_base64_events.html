@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Base64 Events Test - ReWear</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #202f4a;
+        color: white;
+      }
+      .test-section {
+        background: white;
+        color: #202f4a;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 10px;
+      }
+      .success {
+        color: green;
+        font-weight: bold;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+      .warning {
+        color: orange;
+        font-weight: bold;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      .log {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-family: monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        border: 1px solid #ccc;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔧 Base64 Events Test (CORS-Free)</h1>
+
+    <div class="test-section">
+      <h2>Test Event Creation with Base64 Images</h2>
+      <p>
+        This test creates an event using base64 image storage to avoid CORS
+        issues completely.
+      </p>
+
+      <input
+        type="file"
+        id="testImage"
+        accept="image/*"
+        style="margin: 10px 0"
+      />
+      <br />
+      <button onclick="testBase64Event()">Test Base64 Event Creation</button>
+      <button onclick="testEventWithoutImage()">
+        Test Event Without Image
+      </button>
+
+      <div id="testResult" style="margin-top: 10px"></div>
+      <div id="imagePreview"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Test Results</h2>
+      <div id="testLog" class="log"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="js/firebase.js"></script>
+
+    <script>
+      function log(message, type = "info") {
+        const logDiv = document.getElementById("testLog");
+        const timestamp = new Date().toLocaleTimeString();
+        const color =
+          type === "error"
+            ? "red"
+            : type === "success"
+            ? "green"
+            : type === "warning"
+            ? "orange"
+            : "blue";
+        logDiv.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      // Helper function to convert file to base64
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+        });
+      }
+
+      // Test base64 event creation
+      async function testBase64Event() {
+        const fileInput = document.getElementById("testImage");
+        const file = fileInput.files[0];
+        const resultDiv = document.getElementById("testResult");
+        const imagePreview = document.getElementById("imagePreview");
+
+        if (!file) {
+          resultDiv.innerHTML =
+            '<span class="warning">⚠️ Please select a file first</span>';
+          return;
+        }
+
+        if (!window.auth.currentUser) {
+          log("Signing in anonymously...", "info");
+          try {
+            await window.auth.signInAnonymously();
+            log("Anonymous sign in successful", "success");
+          } catch (error) {
+            log(`Sign in failed: ${error.message}`, "error");
+            return;
+          }
+        }
+
+        log("Starting base64 event creation test...", "info");
+        resultDiv.innerHTML =
+          '<span class="warning">⏳ Creating event with base64 image...</span>';
+
+        try {
+          const eventId = window.db.ref("events").push().key;
+          log(`Generated event ID: ${eventId}`, "info");
+
+          // Convert file to base64
+          log("Converting image to base64...", "info");
+          const base64Url = await fileToBase64(file);
+          log("Image converted to base64 successfully", "success");
+
+          // Show image preview
+          imagePreview.innerHTML = `<img src="${base64Url}" class="preview-image" alt="Preview">`;
+
+          // Create event in database with base64 image
+          const testEvent = {
+            eventId: eventId,
+            eventName: "Base64 Test Event",
+            organizerName: "Test Organizer",
+            organizerEmail: "test@example.com",
+            organizerPhone: "1234567890",
+            typeOfOrganizer: "NGO",
+            location: "Test Location",
+            startDate: "2025-01-01",
+            endDate: "2025-01-02",
+            time: "10:00",
+            registrationDeadline: "2024-12-31",
+            description: "This is a base64 test event (CORS-free)",
+            clothTypes: ["Children"],
+            posterUrl: base64Url,
+            proofImageUrl: "",
+            createdAt: new Date().toISOString(),
+            createdBy: window.auth.currentUser.uid,
+          };
+
+          await window.db.ref(`events/${eventId}`).set(testEvent);
+          log("Event saved to database with base64 image", "success");
+
+          // Verify the event was created
+          const savedEvent = await window.db
+            .ref(`events/${eventId}`)
+            .once("value");
+          const eventData = savedEvent.val();
+          log(`Event verified: ${eventData.eventName}`, "success");
+          log(
+            `Base64 image length: ${eventData.posterUrl.length} characters`,
+            "info"
+          );
+
+          // Clean up
+          await window.db.ref(`events/${eventId}`).remove();
+          log("Test event cleaned up", "success");
+
+          resultDiv.innerHTML =
+            '<span class="success">✅ Base64 event creation successful! No CORS issues.</span>';
+        } catch (error) {
+          log(`Test failed: ${error.message}`, "error");
+          resultDiv.innerHTML = `<span class="error">❌ Test failed: ${error.message}</span>`;
+        }
+      }
+
+      // Test event creation without image
+      async function testEventWithoutImage() {
+        const resultDiv = document.getElementById("testResult");
+        const imagePreview = document.getElementById("imagePreview");
+
+        if (!window.auth.currentUser) {
+          log("Signing in anonymously...", "info");
+          try {
+            await window.auth.signInAnonymously();
+            log("Anonymous sign in successful", "success");
+          } catch (error) {
+            log(`Sign in failed: ${error.message}`, "error");
+            return;
+          }
+        }
+
+        log("Starting event creation test without image...", "info");
+        resultDiv.innerHTML =
+          '<span class="warning">⏳ Creating event without image...</span>';
+        imagePreview.innerHTML = "";
+
+        try {
+          const eventId = window.db.ref("events").push().key;
+          log(`Generated event ID: ${eventId}`, "info");
+
+          const testEvent = {
+            eventId: eventId,
+            eventName: "No Image Test Event",
+            organizerName: "Test Organizer",
+            organizerEmail: "test@example.com",
+            organizerPhone: "1234567890",
+            typeOfOrganizer: "NGO",
+            location: "Test Location",
+            startDate: "2025-01-01",
+            endDate: "2025-01-02",
+            time: "10:00",
+            registrationDeadline: "2024-12-31",
+            description: "This is a test event without image",
+            clothTypes: ["Children"],
+            posterUrl: "",
+            proofImageUrl: "",
+            createdAt: new Date().toISOString(),
+            createdBy: window.auth.currentUser.uid,
+          };
+
+          await window.db.ref(`events/${eventId}`).set(testEvent);
+          log("Event saved to database successfully", "success");
+
+          // Clean up
+          await window.db.ref(`events/${eventId}`).remove();
+          log("Test event cleaned up", "success");
+
+          resultDiv.innerHTML =
+            '<span class="success">✅ Event creation without image successful!</span>';
+        } catch (error) {
+          log(`Test failed: ${error.message}`, "error");
+          resultDiv.innerHTML = `<span class="error">❌ Test failed: ${error.message}</span>`;
+        }
+      }
+
+      // Initialize
+      window.addEventListener("load", function () {
+        log("Base64 test page loaded", "info");
+        log("Ready to test CORS-free event creation", "info");
+      });
+    </script>
+  </body>
+</html>

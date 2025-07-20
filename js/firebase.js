@@ -14,4 +14,5 @@ window.firebaseConfig = {
 firebase.initializeApp(window.firebaseConfig);
 window.auth = firebase.auth();
 window.db = firebase.database();
+window.storage = firebase.storage();
 window.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);

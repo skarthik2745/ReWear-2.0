@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Participants Modal Test - ReWear</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #202f4a;
+        color: white;
+      }
+      .test-section {
+        background: white;
+        color: #202f4a;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 10px;
+      }
+      .success {
+        color: green;
+        font-weight: bold;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+      .warning {
+        color: orange;
+        font-weight: bold;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      .log {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-family: monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .event-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        border: 1px solid #e9ecef;
+      }
+      .event-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .event-meta {
+        color: #6c63ff;
+        margin-bottom: 5px;
+      }
+      .event-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .event-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .event-btn.green {
+        background: #4caf50;
+        color: white;
+      }
+      .event-btn.pink {
+        background: #e91e63;
+        color: white;
+      }
+
+      /* Participants Modal Styles */
+      .event-modal-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(32, 47, 74, 0.85);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+      }
+
+      .participants-modal {
+        background: #fff;
+        border-radius: 1.2rem;
+        box-shadow: 0 4px 32px #202f4a33;
+        padding: 0;
+        min-width: 320px;
+        max-width: 98vw;
+        width: 60%;
+        position: relative;
+        font-family: "Poppins", "Roboto", sans-serif;
+        max-height: 80vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+      }
+
+      .participants-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 1.5rem 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        background: #f8f9fa;
+        border-radius: 1.2rem 1.2rem 0 0;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .participants-header h3 {
+        color: #202f4a;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .participant-count {
+        color: #6c63ff;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: #f0f0ff;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        border: 1px solid #e0e0ff;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        white-space: nowrap;
+      }
+
+      .participants-header .close-modal {
+        position: static;
+        font-size: 1.2rem;
+        color: #e91e63;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+
+      .participants-header .close-modal:hover {
+        background: #fce4ec;
+      }
+
+      .participants-list {
+        padding: 1rem 1.5rem 1.5rem 1.5rem;
+        overflow-y: auto;
+        flex: 1;
+        max-height: calc(80vh - 120px);
+        scrollbar-width: thin;
+        scrollbar-color: #6c63ff #f0f0f0;
+      }
+
+      .participants-list::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .participants-list::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 4px;
+      }
+
+      .participants-list::-webkit-scrollbar-thumb {
+        background: #6c63ff;
+        border-radius: 4px;
+      }
+
+      .participants-list::-webkit-scrollbar-thumb:hover {
+        background: #5a52d5;
+      }
+
+      .no-participants {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+      }
+
+      .no-participants-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+
+      .no-participants h4 {
+        color: #202f4a;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .no-participants p {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      .participant-card {
+        background: #f8f9fa;
+        border-radius: 0.8rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e9ecef;
+        transition: box-shadow 0.2s;
+      }
+
+      .participant-card:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .participant-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .participant-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #202f4a;
+      }
+
+      .participant-location {
+        font-size: 0.9rem;
+        color: #6c63ff;
+        font-weight: 500;
+      }
+
+      .participant-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .participant-contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .contact-item {
+        font-size: 0.9rem;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .participant-clothes {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .clothes-label {
+        font-weight: 600;
+        color: #202f4a;
+        font-size: 0.9rem;
+      }
+
+      .clothes-text {
+        color: #495057;
+        font-size: 0.9rem;
+      }
+
+      .clothes-count {
+        color: #6c63ff;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .participant-images {
+        margin-top: 0.5rem;
+      }
+
+      .images-label {
+        font-weight: 600;
+        color: #202f4a;
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .images-scroll {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding: 0.5rem 0;
+      }
+
+      .participant-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+        border: 2px solid #ddd;
+        transition: transform 0.2s;
+        flex-shrink: 0;
+      }
+
+      .participant-image:hover {
+        transform: scale(1.1);
+        border-color: #6c63ff;
+      }
+
+      .loading {
+        text-align: center;
+        color: #202f4a;
+        font-size: 1.1rem;
+        padding: 2rem;
+      }
+
+      .error-message {
+        text-align: center;
+        color: #dc3545;
+        padding: 2rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>👥 Participants Modal Test</h1>
+
+    <div class="test-section">
+      <h2>Test Participants Modal Functionality</h2>
+      <p>
+        This test verifies the participants modal with sample data and real
+        Firebase data.
+      </p>
+
+      <button onclick="testWithSampleData()">Test with Sample Data</button>
+      <button onclick="testWithRealData()">Test with Real Firebase Data</button>
+      <button onclick="testEmptyParticipants()">Test Empty Participants</button>
+
+      <div id="testResult" style="margin-top: 10px"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Sample Event Cards</h2>
+      <div class="event-card">
+        <div class="event-title">Cloth Drive 3.0</div>
+        <div class="event-meta">📅 Aug 3, 2025</div>
+        <div class="event-meta">📍 Chennai</div>
+        <div class="event-actions">
+          <button
+            class="event-btn green"
+            onclick="testSampleEvent('Cloth Drive 3.0')"
+          >
+            👥 View Participants
+          </button>
+          <button class="event-btn pink">🗑️ Delete Event</button>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <div class="event-title">Cloth Drive 2.0</div>
+        <div class="event-meta">📅 Mar 3, 2024 - Sep 3, 2025 | ⏰ 09:00</div>
+        <div class="event-meta">📍 Chennai</div>
+        <div class="event-actions">
+          <button
+            class="event-btn green"
+            onclick="testSampleEvent('Cloth Drive 2.0')"
+          >
+            👥 View Participants
+          </button>
+          <button class="event-btn pink">🗑️ Delete Event</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Test Results</h2>
+      <div id="testLog" class="log"></div>
+    </div>
+
+    <!-- Participants Modal -->
+    <div id="participantsModal" class="event-modal-bg" style="display: none">
+      <div class="participants-modal">
+        <div id="participantsModalContent"></div>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="js/firebase.js"></script>
+
+    <script>
+      function log(message, type = "info") {
+        const logDiv = document.getElementById("testLog");
+        const timestamp = new Date().toLocaleTimeString();
+        const color =
+          type === "error"
+            ? "red"
+            : type === "success"
+            ? "green"
+            : type === "warning"
+            ? "orange"
+            : "blue";
+        logDiv.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      // Test with sample data
+      function testWithSampleData() {
+        const resultDiv = document.getElementById("testResult");
+        resultDiv.innerHTML =
+          '<span class="warning">⏳ Testing with sample data...</span>';
+
+        const sampleParticipants = [
+          {
+            id: "participant1",
+            name: "John Doe",
+            email: "john.doe@gmail.com",
+            phone: "9876543210",
+            location: "Chennai",
+            numOfClothes: 5,
+            clothDetails: "Kids Winter Jacket, good condition",
+            imageUrls: [
+              "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNSAxNUg0NVY0NUgxNVYxNVoiIGZpbGw9IiNEN0Q3RDciLz4KPHBhdGggZD0iTTE4Ljc1IDE4Ljc1SDI2LjI1VjI2LjI1SDE4Ljc1VjE4Ljc1WiIgZmlsbD0iI0M3QzdDNyIvPgo8cGF0aCBkPSJNMjYuMjUgMTguNzVIMzMuNzVWMjYuMjVIMjYuMjVWMTguNzVaIiBmaWxsPSIjQzdDN0M3Ii8+CjxwYXRoIGQ9Ik0xOC43NSAzMEgzMy43NVYzN0gxOC43NVYzMFoiIGZpbGw9IiNDN0M3QzciLz4KPC9zdmc+",
+              "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNSAxNUg0NVY0NUgxNVYxNVoiIGZpbGw9IiNEN0Q3RDciLz4KPHBhdGggZD0iTTE4Ljc1IDE4Ljc1SDI2LjI1VjI2LjI1SDE4Ljc1VjE4Ljc1WiIgZmlsbD0iI0M3QzdDNyIvPgo8cGF0aCBkPSJNMjYuMjUgMTguNzVIMzMuNzVWMjYuMjVIMjYuMjVWMTguNzVaIiBmaWxsPSIjQzdDN0M3Ii8+CjxwYXRoIGQ9Ik0xOC43NSAzMEgzMy43NVYzN0gxOC43NVYzMFoiIGZpbGw9IiNDN0M3QzciLz4KPC9zdmc+",
+            ],
+            participatedAt: "2024-01-01T10:00:00Z",
+          },
+          {
+            id: "participant2",
+            name: "Jane Smith",
+            email: "jane.smith@gmail.com",
+            phone: "8765432109",
+            location: "Mumbai",
+            numOfClothes: 3,
+            clothDetails: "Adult shirts, excellent condition",
+            imageUrls: [
+              "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNSAxNUg0NVY0NUgxNVYxNVoiIGZpbGw9IiNEN0Q3RDciLz4KPHBhdGggZD0iTTE4Ljc1IDE4Ljc1SDI2LjI1VjI2LjI1SDE4Ljc1VjE4Ljc1WiIgZmlsbD0iI0M3QzdDNyIvPgo8cGF0aCBkPSJNMjYuMjUgMTguNzVIMzMuNzVWMjYuMjVIMjYuMjVWMTguNzVaIiBmaWxsPSIjQzdDN0M3Ii8+CjxwYXRoIGQ9Ik0xOC43NSAzMEgzMy43NVYzN0gxOC43NVYzMFoiIGZpbGw9IiNDN0M3QzciLz4KPC9zdmc+",
+            ],
+            participatedAt: "2024-01-02T14:30:00Z",
+          },
+        ];
+
+        const sampleEventData = {
+          eventName: "Test Event with Participants",
+        };
+
+        renderParticipantsModal(sampleParticipants, sampleEventData);
+        resultDiv.innerHTML =
+          '<span class="success">✅ Sample data modal displayed successfully!</span>';
+        log("Sample participants modal test completed", "success");
+      }
+
+      // Test with real Firebase data
+      async function testWithRealData() {
+        const resultDiv = document.getElementById("testResult");
+
+        if (!window.auth.currentUser) {
+          log("Signing in anonymously...", "info");
+          try {
+            await window.auth.signInAnonymously();
+            log("Anonymous sign in successful", "success");
+          } catch (error) {
+            log(`Sign in failed: ${error.message}`, "error");
+            return;
+          }
+        }
+
+        resultDiv.innerHTML =
+          '<span class="warning">⏳ Testing with real Firebase data...</span>';
+
+        try {
+          // Get the first event from Firebase
+          const eventsRef = window.db.ref("events");
+          const eventsSnapshot = await eventsRef.once("value");
+          const events = [];
+          eventsSnapshot.forEach(function (childSnapshot) {
+            const event = childSnapshot.val();
+            event.eventId = childSnapshot.key;
+            events.push(event);
+          });
+
+          if (events.length === 0) {
+            resultDiv.innerHTML =
+              '<span class="warning">⚠️ No events found in Firebase</span>';
+            log("No events found in Firebase", "warning");
+            return;
+          }
+
+          const firstEvent = events[0];
+          log(`Testing with event: ${firstEvent.eventName}`, "info");
+
+          // Get participants for this event
+          const participantsRef = window.db.ref(
+            `events/${firstEvent.eventId}/participants`
+          );
+          const participantsSnapshot = await participantsRef.once("value");
+          const participants = [];
+          participantsSnapshot.forEach(function (childSnapshot) {
+            const participant = childSnapshot.val();
+            participant.id = childSnapshot.key;
+            participants.push(participant);
+          });
+
+          log(`Found ${participants.length} participants for event`, "info");
+          renderParticipantsModal(participants, firstEvent);
+
+          resultDiv.innerHTML = `<span class="success">✅ Real data modal displayed! Found ${participants.length} participants.</span>`;
+        } catch (error) {
+          log(`Error testing with real data: ${error.message}`, "error");
+          resultDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+        }
+      }
+
+      // Test empty participants
+      function testEmptyParticipants() {
+        const resultDiv = document.getElementById("testResult");
+        resultDiv.innerHTML =
+          '<span class="warning">⏳ Testing empty participants...</span>';
+
+        const emptyParticipants = [];
+        const sampleEventData = {
+          eventName: "Test Event with No Participants",
+        };
+
+        renderParticipantsModal(emptyParticipants, sampleEventData);
+        resultDiv.innerHTML =
+          '<span class="success">✅ Empty participants modal displayed successfully!</span>';
+        log("Empty participants modal test completed", "success");
+      }
+
+      // Test sample event
+      function testSampleEvent(eventName) {
+        log(`Testing participants modal for event: ${eventName}`, "info");
+
+        const sampleParticipants = [
+          {
+            id: "participant1",
+            name: "John Doe",
+            email: "john.doe@gmail.com",
+            phone: "9876543210",
+            location: "Chennai",
+            numOfClothes: 5,
+            clothDetails: "Kids Winter Jacket, good condition",
+            imageUrls: [
+              "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xNSAxNUg0NVY0NUgxNVYxNVoiIGZpbGw9IiNEN0Q3RDciLz4KPHBhdGggZD0iTTE4Ljc1IDE4Ljc1SDI2LjI1VjI2LjI1SDE4Ljc1VjE4Ljc1WiIgZmlsbD0iI0M3QzdDNyIvPgo8cGF0aCBkPSJNMjYuMjUgMTguNzVIMzMuNzVWMjYuMjVIMjYuMjVWMTguNzVaIiBmaWxsPSIjQzdDN0M3Ii8+CjxwYXRoIGQ9Ik0xOC43NSAzMEgzMy43NVYzN0gxOC43NVYzMFoiIGZpbGw9IiNDN0M3QzciLz4KPC9zdmc+",
+            ],
+            participatedAt: "2024-01-01T10:00:00Z",
+          },
+        ];
+
+        const sampleEventData = {
+          eventName: eventName,
+        };
+
+        renderParticipantsModal(sampleParticipants, sampleEventData);
+      }
+
+      // Render participants modal (copied from events.js)
+      function renderParticipantsModal(participants, eventData) {
+        const modalContent = document.getElementById(
+          "participantsModalContent"
+        );
+
+        if (!participants || participants.length === 0) {
+          modalContent.innerHTML = `
+                <div class="participants-header">
+                    <h3>Participants for ${eventData.eventName}</h3>
+                    <div class="participant-count">👥 ${
+                      participants.length
+                    } participant${participants.length !== 1 ? "s" : ""}</div>
+                    <button class="close-modal" onclick="closeParticipantsModal()">❌</button>
+                </div>
+                <div class="no-participants">
+                    <div class="no-participants-icon">👥</div>
+                    <h4>No participants registered yet</h4>
+                    <p>This event hasn't received any participation submissions yet.</p>
+                </div>
+            `;
+        } else {
+          const participantsHtml = participants
+            .map((participant) => {
+              const imagesHtml =
+                participant.imageUrls && participant.imageUrls.length > 0
+                  ? `
+                            <div class="participant-images">
+                                <span class="images-label">🖼️ Uploaded Images:</span>
+                                <div class="images-scroll">
+                                    ${participant.imageUrls
+                                      .map(
+                                        (imageUrl, index) => `
+                                        <img src="${imageUrl}" 
+                                             alt="Cloth image ${index + 1}" 
+                                             class="participant-image"
+                                             title="Cloth image ${index + 1}">
+                                    `
+                                      )
+                                      .join("")}
+                                </div>
+                            </div>
+                        `
+                  : "";
+
+              return `
+                        <div class="participant-card">
+                            <div class="participant-header">
+                                <div class="participant-name">👤 ${participant.name}</div>
+                                <div class="participant-location">📍 ${participant.location}</div>
+                            </div>
+                            <div class="participant-details">
+                                <div class="participant-contact">
+                                    <span class="contact-item">📧 ${participant.email}</span>
+                                    <span class="contact-item">📱 ${participant.phone}</span>
+                                </div>
+                                <div class="participant-clothes">
+                                    <span class="clothes-label">🧵 Cloth Details:</span>
+                                    <span class="clothes-text">${participant.clothDetails}</span>
+                                    <span class="clothes-count">(${participant.numOfClothes} items)</span>
+                                </div>
+                                ${imagesHtml}
+                            </div>
+                        </div>
+                    `;
+            })
+            .join("");
+
+          modalContent.innerHTML = `
+                <div class="participants-header">
+                    <h3>Participants for ${eventData.eventName}</h3>
+                    <div class="participant-count">👥 ${
+                      participants.length
+                    } participant${participants.length !== 1 ? "s" : ""}</div>
+                    <button class="close-modal" onclick="closeParticipantsModal()">❌</button>
+                </div>
+                <div class="participants-list">
+                    ${participantsHtml}
+                </div>
+            `;
+        }
+
+        // Show the modal
+        document.getElementById("participantsModal").style.display = "flex";
+      }
+
+      // Close participants modal
+      function closeParticipantsModal() {
+        document.getElementById("participantsModal").style.display = "none";
+      }
+
+      // Initialize
+      window.addEventListener("load", function () {
+        log("Participants modal test page loaded", "info");
+        log("Ready to test participants modal functionality", "info");
+      });
+    </script>
+  </body>
+</html>

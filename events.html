@@ -75,12 +75,10 @@
               <label>Type of Organizer</label>
               <select id="organizerType" required>
                 <option value="">Select</option>
-                <option>NGO</option>
-                <option>Orphanage</option>
-                <option>Old Age Home</option>
-                <option>School</option>
-                <option>College</option>
-                <option>Other</option>
+                <option value="Orphanage">Orphanage</option>
+                <option value="NGO">NGO</option>
+                <option value="Old Age Home">Old Age Home</option>
+                <option value="Others">Others</option>
               </select>
             </div>
             <div class="form-group">
@@ -94,12 +92,12 @@
               <input type="date" id="startDate" required />
             </div>
             <div class="form-group">
-              <label>End Date</label>
-              <input type="date" id="endDate" required />
+              <label>End Date (Optional)</label>
+              <input type="date" id="endDate" />
             </div>
             <div class="form-group">
-              <label>Time</label>
-              <input type="time" id="eventTime" required />
+              <label>Time (Optional)</label>
+              <input type="time" id="eventTime" />
             </div>
             <div class="form-group">
               <label>Registration Deadline</label>
@@ -117,17 +115,49 @@
                 ><input type="checkbox" value="Children" /> 👶 Children</label
               >
               <label><input type="checkbox" value="Adult" /> 👕 Adult</label>
+              <label
+                ><input type="checkbox" value="Baby Clothes" /> 👶 Baby
+                Clothes</label
+              >
               <label><input type="checkbox" value="Winter" /> 🧥 Winter</label>
               <label
-                ><input type="checkbox" value="Daily Wear" /> 👚 Daily
+                ><input type="checkbox" value="Daily Wear" /> 👔 Daily
                 Wear</label
               >
-              <label><input type="checkbox" value="Other" /> 🧦 Other</label>
+              <label
+                ><input type="checkbox" value="Sportswear" /> 🧘
+                Sportswear</label
+              >
+              <label
+                ><input type="checkbox" value="Traditional Wear" /> 👚
+                Traditional Wear</label
+              >
+              <label
+                ><input type="checkbox" value="Scarves and Shawls" /> 🧣 Scarves
+                and Shawls</label
+              >
+              <label
+                ><input type="checkbox" value="Footwear" /> 👞 Footwear</label
+              >
+              <label
+                ><input type="checkbox" value="Accessories" /> 🧤
+                Accessories</label
+              >
+              <label><input type="checkbox" value="Other" /> 🧺 Other</label>
             </div>
           </div>
-          <div class="form-group">
-            <label>Upload Poster/Banner</label>
-            <input type="file" id="eventPoster" accept="image/*" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Upload Poster (A4 Size Poster Image, optional)</label>
+              <input type="file" id="eventPoster" accept="image/*" />
+            </div>
+            <div class="form-group">
+              <label
+                >Upload Trust Proof (Photo of Orphanage/NGO Certificate
+                etc.)</label
+              >
+              <input type="file" id="proofImage" accept="image/*" />
+            </div>
           </div>
           <button type="submit" class="main-btn event-submit-btn">
             Submit Event
@@ -139,12 +169,14 @@
           ></div>
         </form>
       </section>
+
       <!-- Browse Events -->
       <section class="browse-events-section">
         <h2>🗓 Upcoming & Ongoing Cloth Donation Events</h2>
         <div id="eventsList" class="events-list"></div>
       </section>
-      <!-- Organizer Dashboard (Optional) -->
+
+      <!-- Organizer Dashboard -->
       <section
         class="organizer-dashboard-section"
         id="organizerDashboard"
@@ -154,12 +186,75 @@
         <div id="yourEventsList" class="events-list"></div>
       </section>
     </main>
+
+    <!-- Participation Modal -->
+    <div id="participationModal" class="event-modal-bg" style="display: none">
+      <div class="event-modal">
+        <button class="close-modal" onclick="closeParticipationModal()">
+          &times;
+        </button>
+        <h3>💚 Participate in Event</h3>
+        <form id="participationForm">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="participantName" readonly />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="participantEmail" readonly />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="participantPhone" readonly />
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="participantLocation" readonly />
+          </div>
+          <div class="form-group">
+            <label>Number of Clothes</label>
+            <input type="number" id="numOfClothes" required min="1" />
+          </div>
+          <div class="form-group">
+            <label>Cloth Type and Condition</label>
+            <textarea
+              id="clothDetails"
+              rows="3"
+              required
+              placeholder="E.g., 4 shirts, good condition"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label
+              >Upload Photos of Clothes (You can upload more than one)</label
+            >
+            <input type="file" id="clothImages" accept="image/*" multiple />
+            <div
+              id="imagePreview"
+              class="image-preview"
+              style="display: none; margin-top: 10px"
+            ></div>
+          </div>
+          <button type="submit" class="main-btn">Submit Participation</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Participants Modal -->
+    <div id="participantsModal" class="event-modal-bg" style="display: none">
+      <div class="participants-modal">
+        <div id="participantsModalContent"></div>
+      </div>
+    </div>
+
     <footer class="footer">
       <p>&copy; 2024 ReWear. All rights reserved.</p>
     </footer>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="js/firebase.js"></script>
     <script src="js/events.js"></script>
     <script>

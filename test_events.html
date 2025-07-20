@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events System Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #202f4a;
+        color: white;
+      }
+      .test-section {
+        background: white;
+        color: #202f4a;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 10px;
+      }
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+      .info {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ReWear Events System Test</h1>
+
+    <div class="test-section">
+      <h2>Firebase Connection Test</h2>
+      <div id="firebaseStatus">Checking Firebase connection...</div>
+    </div>
+
+    <div class="test-section">
+      <h2>Authentication Test</h2>
+      <div id="authStatus">Checking authentication...</div>
+      <button onclick="testAuth()">Test Authentication</button>
+    </div>
+
+    <div class="test-section">
+      <h2>Database Test</h2>
+      <div id="dbStatus">Checking database...</div>
+      <button onclick="testDatabase()">Test Database</button>
+    </div>
+
+    <div class="test-section">
+      <h2>Storage Test</h2>
+      <div id="storageStatus">Checking storage...</div>
+      <button onclick="testStorage()">Test Storage</button>
+    </div>
+
+    <div class="test-section">
+      <h2>Events List Test</h2>
+      <div id="eventsStatus">Checking events...</div>
+      <button onclick="testEvents()">Load Events</button>
+      <div id="eventsList"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="js/firebase.js"></script>
+
+    <script>
+      // Test Firebase connection
+      function testFirebase() {
+        const status = document.getElementById("firebaseStatus");
+        try {
+          if (window.firebase && window.auth && window.db && window.storage) {
+            status.innerHTML =
+              '<span class="success">✅ Firebase connected successfully!</span>';
+            return true;
+          } else {
+            status.innerHTML =
+              '<span class="error">❌ Firebase connection failed</span>';
+            return false;
+          }
+        } catch (error) {
+          status.innerHTML = `<span class="error">❌ Firebase error: ${error.message}</span>`;
+          return false;
+        }
+      }
+
+      // Test authentication
+      function testAuth() {
+        const status = document.getElementById("authStatus");
+        if (!window.auth) {
+          status.innerHTML =
+            '<span class="error">❌ Firebase Auth not available</span>';
+          return;
+        }
+
+        window.auth.onAuthStateChanged(function (user) {
+          if (user) {
+            status.innerHTML = `<span class="success">✅ User authenticated: ${user.email}</span>`;
+          } else {
+            status.innerHTML =
+              '<span class="info">ℹ️ No user authenticated</span>';
+          }
+        });
+      }
+
+      // Test database
+      function testDatabase() {
+        const status = document.getElementById("dbStatus");
+        if (!window.db) {
+          status.innerHTML =
+            '<span class="error">❌ Firebase Database not available</span>';
+          return;
+        }
+
+        const testRef = window.db.ref("test");
+        testRef
+          .set({ timestamp: new Date().toISOString() })
+          .then(() => {
+            status.innerHTML =
+              '<span class="success">✅ Database write successful</span>';
+            return testRef.remove();
+          })
+          .then(() => {
+            status.innerHTML +=
+              '<br><span class="success">✅ Database cleanup successful</span>';
+          })
+          .catch((error) => {
+            status.innerHTML = `<span class="error">❌ Database error: ${error.message}</span>`;
+          });
+      }
+
+      // Test storage
+      function testStorage() {
+        const status = document.getElementById("storageStatus");
+        if (!window.storage) {
+          status.innerHTML =
+            '<span class="error">❌ Firebase Storage not available</span>';
+          return;
+        }
+
+        status.innerHTML =
+          '<span class="success">✅ Firebase Storage available</span>';
+      }
+
+      // Test events loading
+      function testEvents() {
+        const status = document.getElementById("eventsStatus");
+        const eventsList = document.getElementById("eventsList");
+
+        if (!window.db) {
+          status.innerHTML =
+            '<span class="error">❌ Database not available</span>';
+          return;
+        }
+
+        status.innerHTML = '<span class="info">ℹ️ Loading events...</span>';
+
+        const eventsRef = window.db.ref("events");
+        eventsRef
+          .once("value")
+          .then((snapshot) => {
+            const events = [];
+            snapshot.forEach((childSnapshot) => {
+              events.push(childSnapshot.val());
+            });
+
+            if (events.length === 0) {
+              status.innerHTML = '<span class="info">ℹ️ No events found</span>';
+              eventsList.innerHTML = "<p>No events in database</p>";
+            } else {
+              status.innerHTML = `<span class="success">✅ Found ${events.length} events</span>`;
+              eventsList.innerHTML = events
+                .map(
+                  (event) =>
+                    `<div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+                                <h3>${event.eventName}</h3>
+                                <p>Organizer: ${event.organizerName}</p>
+                                <p>Location: ${event.location}</p>
+                                <p>Date: ${event.startDate} - ${event.endDate}</p>
+                            </div>`
+                )
+                .join("");
+            }
+          })
+          .catch((error) => {
+            status.innerHTML = `<span class="error">❌ Error loading events: ${error.message}</span>`;
+          });
+      }
+
+      // Run initial tests
+      window.addEventListener("load", function () {
+        testFirebase();
+        testAuth();
+        testStorage();
+      });
+    </script>
+  </body>
+</html>

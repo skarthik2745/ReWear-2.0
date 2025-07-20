@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiple Images Test - ReWear</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #202f4a;
+        color: white;
+      }
+      .test-section {
+        background: white;
+        color: #202f4a;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 10px;
+      }
+      .success {
+        color: green;
+        font-weight: bold;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+      .warning {
+        color: orange;
+        font-weight: bold;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #e91e63;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      .image-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+      }
+      .image-preview img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        border: 2px solid #ddd;
+      }
+      .log {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-family: monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🖼️ Multiple Images Upload Test</h1>
+
+    <div class="test-section">
+      <h2>Test Multiple Image Upload</h2>
+      <p>
+        This test verifies that multiple images can be selected and previewed
+        correctly.
+      </p>
+
+      <div class="form-group">
+        <label>Upload Photos (You can upload more than one)</label>
+        <input type="file" id="testImages" accept="image/*" multiple />
+        <div
+          id="testImagePreview"
+          class="image-preview"
+          style="display: none"
+        ></div>
+      </div>
+
+      <div id="testResult" style="margin-top: 10px"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Test Results</h2>
+      <div id="testLog" class="log"></div>
+    </div>
+
+    <script>
+      function log(message, type = "info") {
+        const logDiv = document.getElementById("testLog");
+        const timestamp = new Date().toLocaleTimeString();
+        const color =
+          type === "error"
+            ? "red"
+            : type === "success"
+            ? "green"
+            : type === "warning"
+            ? "orange"
+            : "blue";
+        logDiv.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      // Test multiple image upload
+      document.addEventListener("DOMContentLoaded", function () {
+        const imageInput = document.getElementById("testImages");
+        const previewDiv = document.getElementById("testImagePreview");
+        const resultDiv = document.getElementById("testResult");
+
+        log("Setting up multiple image upload test...", "info");
+
+        if (imageInput) {
+          imageInput.addEventListener("change", function (e) {
+            const files = e.target.files;
+            log(
+              `Selected ${files.length} files: ${Array.from(files)
+                .map((f) => f.name)
+                .join(", ")}`,
+              "info"
+            );
+
+            if (files.length > 0) {
+              previewDiv.innerHTML = "";
+              previewDiv.style.display = "block";
+
+              Array.from(files).forEach((file, index) => {
+                log(
+                  `Processing file ${index + 1}: ${file.name} (${file.type})`,
+                  "info"
+                );
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                  const img = document.createElement("img");
+                  img.src = e.target.result;
+                  img.title = file.name;
+                  previewDiv.appendChild(img);
+                  log(`✅ Preview added for ${file.name}`, "success");
+                };
+                reader.onerror = function (error) {
+                  log(`❌ Error reading ${file.name}: ${error}`, "error");
+                };
+                reader.readAsDataURL(file);
+              });
+
+              resultDiv.innerHTML = `<span class="success">✅ Successfully loaded ${files.length} image(s)!</span>`;
+            } else {
+              previewDiv.style.display = "none";
+              resultDiv.innerHTML =
+                '<span class="warning">⚠️ No files selected</span>';
+            }
+          });
+
+          log("✅ Multiple image upload test ready", "success");
+        } else {
+          log("❌ Image input not found!", "error");
+        }
+      });
+    </script>
+  </body>
+</html>

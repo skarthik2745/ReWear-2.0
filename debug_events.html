@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events Debug - ReWear</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #202f4a;
+        color: white;
+      }
+      .debug-section {
+        background: white;
+        color: #202f4a;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 10px;
+      }
+      .success {
+        color: green;
+        font-weight: bold;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+      .info {
+        color: blue;
+        font-weight: bold;
+      }
+      .warning {
+        color: orange;
+        font-weight: bold;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      .log {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-family: monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔧 ReWear Events System Debug</h1>
+
+    <div class="debug-section">
+      <h2>1. Firebase Connection Test</h2>
+      <div id="firebaseStatus">Checking Firebase connection...</div>
+      <button onclick="testFirebase()">Test Firebase</button>
+    </div>
+
+    <div class="debug-section">
+      <h2>2. Authentication Test</h2>
+      <div id="authStatus">Checking authentication...</div>
+      <button onclick="testAuth()">Test Auth</button>
+      <button onclick="signInAnonymously()">Sign In Anonymously</button>
+    </div>
+
+    <div class="debug-section">
+      <h2>3. Database Test</h2>
+      <div id="dbStatus">Checking database...</div>
+      <button onclick="testDatabase()">Test Database</button>
+    </div>
+
+    <div class="debug-section">
+      <h2>4. Storage Test</h2>
+      <div id="storageStatus">Checking storage...</div>
+      <button onclick="testStorage()">Test Storage</button>
+      <input
+        type="file"
+        id="testFile"
+        accept="image/*"
+        style="margin: 10px 0"
+      />
+      <button onclick="testFileUpload()">Test File Upload</button>
+    </div>
+
+    <div class="debug-section">
+      <h2>5. Event Creation Test</h2>
+      <div id="eventTestStatus">Ready to test event creation...</div>
+      <button onclick="testEventCreation()">Test Event Creation</button>
+    </div>
+
+    <div class="debug-section">
+      <h2>6. Console Logs</h2>
+      <div id="consoleLog" class="log"></div>
+      <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="js/firebase.js"></script>
+
+    <script>
+      // Console logging
+      function log(message, type = "info") {
+        const logDiv = document.getElementById("consoleLog");
+        const timestamp = new Date().toLocaleTimeString();
+        const color =
+          type === "error"
+            ? "red"
+            : type === "success"
+            ? "green"
+            : type === "warning"
+            ? "orange"
+            : "blue";
+        logDiv.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+        console.log(`[${type.toUpperCase()}] ${message}`);
+      }
+
+      function clearLog() {
+        document.getElementById("consoleLog").innerHTML = "";
+      }
+
+      // Test Firebase connection
+      function testFirebase() {
+        const status = document.getElementById("firebaseStatus");
+        try {
+          if (window.firebase && window.auth && window.db && window.storage) {
+            status.innerHTML =
+              '<span class="success">✅ Firebase connected successfully!</span>';
+            log("Firebase SDK loaded successfully", "success");
+            return true;
+          } else {
+            status.innerHTML =
+              '<span class="error">❌ Firebase connection failed</span>';
+            log("Firebase SDK not properly loaded", "error");
+            return false;
+          }
+        } catch (error) {
+          status.innerHTML = `<span class="error">❌ Firebase error: ${error.message}</span>`;
+          log(`Firebase error: ${error.message}`, "error");
+          return false;
+        }
+      }
+
+      // Test authentication
+      function testAuth() {
+        const status = document.getElementById("authStatus");
+        if (!window.auth) {
+          status.innerHTML =
+            '<span class="error">❌ Firebase Auth not available</span>';
+          log("Firebase Auth not available", "error");
+          return;
+        }
+
+        window.auth.onAuthStateChanged(function (user) {
+          if (user) {
+            status.innerHTML = `<span class="success">✅ User authenticated: ${
+              user.email || user.uid
+            }</span>`;
+            log(`User authenticated: ${user.email || user.uid}`, "success");
+          } else {
+            status.innerHTML =
+              '<span class="info">ℹ️ No user authenticated</span>';
+            log("No user authenticated", "info");
+          }
+        });
+      }
+
+      // Sign in anonymously
+      function signInAnonymously() {
+        if (!window.auth) {
+          log("Firebase Auth not available", "error");
+          return;
+        }
+
+        log("Attempting anonymous sign in...", "info");
+        window.auth
+          .signInAnonymously()
+          .then((result) => {
+            log("Anonymous sign in successful", "success");
+          })
+          .catch((error) => {
+            log(`Anonymous sign in failed: ${error.message}`, "error");
+          });
+      }
+
+      // Test database
+      function testDatabase() {
+        const status = document.getElementById("dbStatus");
+        if (!window.db) {
+          status.innerHTML =
+            '<span class="error">❌ Firebase Database not available</span>';
+          log("Firebase Database not available", "error");
+          return;
+        }
+
+        log("Testing database write...", "info");
+        const testRef = window.db.ref("debug_test");
+        testRef
+          .set({ timestamp: new Date().toISOString() })
+          .then(() => {
+            status.innerHTML =
+              '<span class="success">✅ Database write successful</span>';
+            log("Database write successful", "success");
+            return testRef.remove();
+          })
+          .then(() => {
+            status.innerHTML +=
+              '<br><span class="success">✅ Database cleanup successful</span>';
+            log("Database cleanup successful", "success");
+          })
+          .catch((error) => {
+            status.innerHTML = `<span class="error">❌ Database error: ${error.message}</span>`;
+            log(`Database error: ${error.message}`, "error");
+          });
+      }
+
+      // Test storage
+      function testStorage() {
+        const status = document.getElementById("storageStatus");
+        if (!window.storage) {
+          status.innerHTML =
+            '<span class="error">❌ Firebase Storage not available</span>';
+          log("Firebase Storage not available", "error");
+          return;
+        }
+
+        status.innerHTML =
+          '<span class="success">✅ Firebase Storage available</span>';
+        log("Firebase Storage available", "success");
+      }
+
+      // Test file upload
+      function testFileUpload() {
+        const fileInput = document.getElementById("testFile");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          log("No file selected for upload test", "warning");
+          return;
+        }
+
+        if (!window.storage) {
+          log("Firebase Storage not available", "error");
+          return;
+        }
+
+        if (!window.auth.currentUser) {
+          log("User not authenticated for file upload", "error");
+          return;
+        }
+
+        log(`Testing file upload: ${file.name} (${file.size} bytes)`, "info");
+
+        const testRef = window.storage.ref(
+          `debug_test/${Date.now()}_${file.name}`
+        );
+        testRef
+          .put(file)
+          .then((snapshot) => {
+            log("File upload successful", "success");
+            return snapshot.ref.getDownloadURL();
+          })
+          .then((url) => {
+            log(`File download URL: ${url}`, "success");
+            // Clean up
+            return testRef.delete();
+          })
+          .then(() => {
+            log("Test file deleted successfully", "success");
+          })
+          .catch((error) => {
+            log(`File upload error: ${error.message}`, "error");
+          });
+      }
+
+      // Test event creation
+      function testEventCreation() {
+        const status = document.getElementById("eventTestStatus");
+
+        if (!window.auth.currentUser) {
+          status.innerHTML =
+            '<span class="error">❌ User not authenticated</span>';
+          log("User not authenticated for event creation", "error");
+          return;
+        }
+
+        if (!window.db) {
+          status.innerHTML =
+            '<span class="error">❌ Database not available</span>';
+          log("Database not available for event creation", "error");
+          return;
+        }
+
+        log("Testing event creation...", "info");
+
+        const testEvent = {
+          eventId: "test_" + Date.now(),
+          eventName: "Test Event",
+          organizerName: "Test Organizer",
+          organizerEmail: "test@example.com",
+          organizerPhone: "1234567890",
+          typeOfOrganizer: "NGO",
+          location: "Test Location",
+          startDate: "2025-01-01",
+          endDate: "2025-01-02",
+          time: "10:00",
+          registrationDeadline: "2024-12-31",
+          description: "This is a test event",
+          clothTypes: ["Children", "Winter"],
+          posterUrl: "",
+          proofImageUrl: "",
+          createdAt: new Date().toISOString(),
+          createdBy: window.auth.currentUser.uid,
+        };
+
+        const eventRef = window.db.ref(`events/${testEvent.eventId}`);
+        eventRef
+          .set(testEvent)
+          .then(() => {
+            status.innerHTML =
+              '<span class="success">✅ Test event created successfully</span>';
+            log("Test event created successfully", "success");
+            return eventRef.remove();
+          })
+          .then(() => {
+            status.innerHTML +=
+              '<br><span class="success">✅ Test event cleaned up</span>';
+            log("Test event cleaned up", "success");
+          })
+          .catch((error) => {
+            status.innerHTML = `<span class="error">❌ Event creation error: ${error.message}</span>`;
+            log(`Event creation error: ${error.message}`, "error");
+          });
+      }
+
+      // Run initial tests
+      window.addEventListener("load", function () {
+        log("Debug page loaded", "info");
+        testFirebase();
+        testAuth();
+        testStorage();
+      });
+    </script>
+  </body>
+</html>
