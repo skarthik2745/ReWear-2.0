@@ -479,33 +479,60 @@ function renderEvents(events) {
       .join(", ");
 
     card.innerHTML = `
+      <div class="event-content">
+        <div class="event-title">${event.eventName}</div>
+        <div class="event-field"><span class="event-label">Organizer Name:</span> <span class="event-value">${
+          event.organizerName
+        }</span></div>
+        <div class="event-field"><span class="event-label">Organizer Email:</span> <span class="event-value">${
+          event.organizerEmail
+        }</span></div>
+        <div class="event-field"><span class="event-label">Organizer Phone:</span> <span class="event-value">${
+          event.organizerPhone
+        }</span></div>
+        <div class="event-field"><span class="event-label">Location:</span> <span class="event-value">${
+          event.location
+        }</span></div>
+        <div class="event-field"><span class="event-label">Type of Organizer:</span> <span class="event-value">${
+          event.typeOfOrganizer
+        }</span></div>
+        <div class="event-field"><span class="event-label">Start Date:</span> <span class="event-value">${formatDate(
+          event.startDate
+        )}</span></div>
+        <div class="event-field"><span class="event-label">End Date:</span> <span class="event-value">${
+          event.endDate ? formatDate(event.endDate) : "Not Specified"
+        }</span></div>
+        <div class="event-field"><span class="event-label">Time:</span> <span class="event-value">${
+          event.time ? event.time : "Not Specified"
+        }</span></div>
+        <div class="event-field"><span class="event-label">Registration Deadline:</span> <span class="event-value event-deadline">${formatDate(
+          event.registrationDeadline
+        )}</span></div>
+        <div class="event-section-heading">Event Description</div>
+        <div class="event-desc">${event.description}</div>
+        <div class="event-section-heading">Types of Clothes Needed</div>
+        <div class="clothes-needed-badges">${event.clothTypes
+          .map(
+            (type) =>
+              `<span class='clothes-badge clothes-badge-${type
+                .replace(/\s+/g, "")
+                .toLowerCase()}'>${type}</span>`
+          )
+          .join(" ")}</div>
+        <div class="event-actions">
+          <button class="event-btn green" onclick="participateInEvent('${
+            event.eventId
+          }')">💚 I Want to Participate</button>
+          <button class="event-btn pink" onclick="contactOrganizer('${
+            event.organizerEmail
+          }')">📧 Contact Organizer</button>
+        </div>
+      </div>
       ${
         event.posterUrl
           ? `<img src="${event.posterUrl}" class="event-poster" alt="Event Poster">`
           : ""
       }
-      <div class="event-title">${event.eventName}</div>
-    <div class="event-meta">By ${event.organizerName} (${
-      event.typeOfOrganizer
-    })</div>
-      <div class="event-meta">📅 ${formatEventDates(
-        event.startDate,
-        event.endDate
-      )}${event.time ? ` | ⏰ ${event.time}` : ""}</div>
-      <div class="event-meta">📍 ${event.location}</div>
-    <div class="event-desc">${event.description}</div>
-      <div class="clothes-needed">Needed: ${clothTypesHtml}</div>
-      <div class="event-meta">⏳ Registration Deadline: ${formatDate(
-        event.registrationDeadline
-      )}</div>
-    <div class="event-actions">
-        <button class="event-btn green" onclick="participateInEvent('${
-          event.eventId
-        }')">💚 I Want to Participate</button>
-        <button class="event-btn pink" onclick="contactOrganizer('${
-          event.organizerEmail
-        }')">📧 Contact Organizer</button>
-    </div>
     `;
 
     eventsList.appendChild(card);
@@ -542,27 +569,60 @@ function renderOrganizerDashboard(events) {
       .join(", ");
 
     card.innerHTML = `
+      <div class="event-content">
+        <div class="event-title">${event.eventName}</div>
+        <div class="event-field"><span class="event-label">Organizer Name:</span> <span class="event-value">${
+          event.organizerName
+        }</span></div>
+        <div class="event-field"><span class="event-label">Organizer Email:</span> <span class="event-value">${
+          event.organizerEmail
+        }</span></div>
+        <div class="event-field"><span class="event-label">Organizer Phone:</span> <span class="event-value">${
+          event.organizerPhone
+        }</span></div>
+        <div class="event-field"><span class="event-label">Location:</span> <span class="event-value">${
+          event.location
+        }</span></div>
+        <div class="event-field"><span class="event-label">Type of Organizer:</span> <span class="event-value">${
+          event.typeOfOrganizer
+        }</span></div>
+        <div class="event-field"><span class="event-label">Start Date:</span> <span class="event-value">${formatDate(
+          event.startDate
+        )}</span></div>
+        <div class="event-field"><span class="event-label">End Date:</span> <span class="event-value">${
+          event.endDate ? formatDate(event.endDate) : "Not Specified"
+        }</span></div>
+        <div class="event-field"><span class="event-label">Time:</span> <span class="event-value">${
+          event.time ? event.time : "Not Specified"
+        }</span></div>
+        <div class="event-field"><span class="event-label">Registration Deadline:</span> <span class="event-value event-deadline">${formatDate(
+          event.registrationDeadline
+        )}</span></div>
+        <div class="event-section-heading">Event Description</div>
+        <div class="event-desc">${event.description}</div>
+        <div class="event-section-heading">Types of Clothes Needed</div>
+        <div class="clothes-needed-badges">${event.clothTypes
+          .map(
+            (type) =>
+              `<span class='clothes-badge clothes-badge-${type
+                .replace(/\s+/g, "")
+                .toLowerCase()}'>${type}</span>`
+          )
+          .join(" ")}</div>
+        <div class="event-actions">
+          <button class="event-btn green" onclick="viewParticipants('${
+            event.eventId
+          }')">👥 View Participants</button>
+          <button class="event-btn pink" onclick="deleteEvent('${
+            event.eventId
+          }')">🗑️ Delete Event</button>
+        </div>
+      </div>
       ${
         event.posterUrl
           ? `<img src="${event.posterUrl}" class="event-poster" alt="Event Poster">`
           : ""
       }
-      <div class="event-title">${event.eventName}</div>
-      <div class="event-meta">📅 ${formatEventDates(
-        event.startDate,
-        event.endDate
-      )}${event.time ? ` | ⏰ ${event.time}` : ""}</div>
-      <div class="event-meta">📍 ${event.location}</div>
-      <div class="event-desc">${event.description}</div>
-      <div class="clothes-needed">Needed: ${clothTypesHtml}</div>
-      <div class="event-actions">
-        <button class="event-btn green" onclick="viewParticipants('${
-          event.eventId
-        }')">👥 View Participants</button>
-        <button class="event-btn pink" onclick="deleteEvent('${
-          event.eventId
-        }')">🗑️ Delete Event</button>
-      </div>
     `;
 
     yourEventsList.appendChild(card);

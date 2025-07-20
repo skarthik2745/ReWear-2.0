@@ -44,15 +44,49 @@ function loadDonations() {
       allDonations = [];
 
       if (snapshot.exists()) {
+        const donationPromises = [];
+
         snapshot.forEach(function (childSnapshot) {
           const donationData = childSnapshot.val();
           donationData.key = childSnapshot.key; // Add Firebase key for reference
-          allDonations.push(donationData);
-        });
-      }
 
-      console.log("Donations loaded from Firebase:", allDonations.length);
-      renderClothes();
+          // Create a promise to fetch user profile for this donation
+          const userProfilePromise = fetchUserLocation(donationData.donorUid)
+            .then((location) => {
+              donationData.userLocation = location;
+              return donationData;
+            })
+            .catch((error) => {
+              console.error(
+                `Error fetching location for donation ${donationData.key}:`,
+                error
+              );
+              donationData.userLocation = "Location not available";
+              return donationData;
+            });
+
+          donationPromises.push(userProfilePromise);
+        });
+
+        // Wait for all user profile fetches to complete
+        Promise.all(donationPromises)
+          .then(function (donationsWithLocation) {
+            allDonations = donationsWithLocation;
+            console.log(
+              "Donations loaded from Firebase with user locations:",
+              allDonations.length
+            );
+            renderClothes();
+          })
+          .catch(function (error) {
+            console.error("Error loading donations with user profiles:", error);
+            allDonations = [];
+            renderClothes();
+          });
+      } else {
+        console.log("No donations found in Firebase");
+        renderClothes();
+      }
     })
     .catch(function (error) {
       console.error("Error loading donations:", error);
@@ -61,7 +95,47 @@ function loadDonations() {
     });
 }
 
+// Helper function to fetch user location from user profile
+function fetchUserLocation(userId) {
+  if (!userId || !window.db) {
+    return Promise.resolve("Location not available");
+  }
+
+  const userRef = window.db.ref(`users/${userId}`);
+
+  return userRef
+    .once("value")
+    .then(function (snapshot) {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        // Check multiple possible location fields in user profile
+        const location =
+          userData.location ||
+          userData.address ||
+          userData.city ||
+          userData.state ||
+          "";
+        return location || "Location not available";
+      } else {
+        console.log(`User profile not found for userId: ${userId}`);
+        return "Location not available";
+      }
+    })
+    .catch(function (error) {
+      console.error(`Error fetching user profile for userId ${userId}:`, error);
+      return "Location not available";
+    });
+}
+
 function filterDonations() {
+  console.log("Filtering donations with:", {
+    name: filterName.value,
+    category: filterCategory.value,
+    size: filterSize.value,
+    condition: filterCondition.value,
+    location: filterLocation.value,
+  });
+
   let filtered = allDonations.filter((item) => {
     // Cloth Name
     if (
@@ -78,34 +152,86 @@ function filterDonations() {
       item.size.toLowerCase() !== filterSize.value.toLowerCase()
     )
       return false;
-    // Condition
-    if (filterCondition.value && item.condition !== filterCondition.value)
-      return false;
-    // Location (address) - check if donor info exists
-    if (
-      filterLocation.value &&
-      (!item.donorEmail ||
-        !item.donorEmail
+    // Condition - handle both old and new condition formats
+    if (filterCondition.value) {
+      const itemCondition = item.condition || "";
+      // Check if the condition starts with the filter value (for old format with descriptions)
+      const conditionMatches =
+        itemCondition
           .toLowerCase()
-          .includes(filterLocation.value.toLowerCase()))
-    )
-      return false;
+          .startsWith(filterCondition.value.toLowerCase()) ||
+        itemCondition === filterCondition.value;
+      if (!conditionMatches) {
+        return false;
+      }
+    }
+    // Location - check if location exists and matches filter
+    if (filterLocation.value) {
+      const itemLocation = item.userLocation || "";
+      const filterValue = filterLocation.value.trim().toLowerCase();
+      const locationValue = itemLocation.trim().toLowerCase();
+
+      console.log(
+        `Location filter: "${filterValue}" vs item location: "${locationValue}"`
+      );
+
+      if (!locationValue.includes(filterValue)) {
+        console.log(`Location filter failed for item: ${item.name}`);
+        return false;
+      }
+      console.log(`Location filter passed for item: ${item.name}`);
+    }
     return true;
   });
+
+  console.log(
+    `Filtered ${filtered.length} items from ${allDonations.length} total items`
+  );
+
+  // Log location filter summary if location filter is active
+  if (filterLocation.value) {
+    const locationMatches = filtered.filter((item) => {
+      const itemLocation = item.userLocation || "";
+      return itemLocation
+        .toLowerCase()
+        .includes(filterLocation.value.toLowerCase());
+    });
+    console.log(
+      `Location filter "${filterLocation.value}" matched ${locationMatches.length} items`
+    );
+  }
+
   return filtered;
 }
 
 function renderClothes() {
   clothesGrid.innerHTML = "";
   let filtered = filterDonations();
+
+  // Check if any filters are applied
+  const hasFilters =
+    filterName.value ||
+    filterCategory.value ||
+    filterSize.value ||
+    filterCondition.value ||
+    filterLocation.value;
+
   if (!filtered.length) {
-    clothesGrid.innerHTML =
-      '<p style="text-align:center;font-size:1.2rem;">No clothes available yet. Be the first to donate!</p>';
+    if (hasFilters) {
+      clothesGrid.innerHTML =
+        '<p style="text-align:center;font-size:1.2rem;color:#8b4513;padding:2rem;">No items found matching your filters. Try adjusting your search criteria.</p>';
+    } else {
+      clothesGrid.innerHTML =
+        '<p style="text-align:center;font-size:1.2rem;">No clothes available yet. Be the first to donate!</p>';
+    }
     return;
   }
   filtered.forEach((item, idx) => {
     const card = document.createElement("div");
     card.className = "cloth-card fadeIn";
+    // Use the fetched user location
+    const itemLocation = item.userLocation || "Location not available";
+
     card.innerHTML = `
       <img src="${
         item.imgData || "assets/images/placeholder.png"
@@ -115,6 +241,7 @@ function renderClothes() {
         <div class="meta">Category: ${item.category}</div>
         <div class="meta">Size: ${item.size}</div>
         <div class="meta">Condition: ${item.condition}</div>
+        <div class="meta">Location: ${itemLocation}</div>
         <div class="meta">Donated: ${new Date(
           item.donatedAt
         ).toLocaleDateString()}</div>
@@ -138,6 +265,9 @@ function showModal(item) {
     showRequestBtn = true;
   }
 
+  // Use the fetched user location for modal
+  const modalItemLocation = item.userLocation || "Location not available";
+
   modalDetails.innerHTML = `
     <div class="modal-left">
       <div class="modal-section">
@@ -146,6 +276,7 @@ function showModal(item) {
         <p><b>Category:</b> ${item.category}</p>
         <p><b>Condition:</b> ${item.condition}</p>
         <p><b>Size:</b> ${item.size}</p>
+        <p><b>Location:</b> ${modalItemLocation}</p>
         <p><b>Donated:</b> ${new Date(item.donatedAt).toLocaleDateString()}</p>
       </div>
     </div>

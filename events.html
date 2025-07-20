@@ -269,5 +269,34 @@
         }
       });
     </script>
+    <!-- Event Poster Image Modal -->
+    <div id="eventImageModalBg" class="event-image-modal-bg">
+      <div class="event-image-modal">
+        <button class="close-modal-btn" onclick="closeEventImageModal()">
+          ×
+        </button>
+        <img id="eventImageModalImg" src="" alt="Event Poster" />
+      </div>
+    </div>
+    <script>
+      // Show modal on poster click
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("event-poster")) {
+          document.getElementById("eventImageModalImg").src = e.target.src;
+          document.getElementById("eventImageModalBg").classList.add("active");
+        }
+      });
+      // Close modal
+      function closeEventImageModal() {
+        document.getElementById("eventImageModalBg").classList.remove("active");
+        document.getElementById("eventImageModalImg").src = "";
+      }
+      // Close modal on overlay click (not image)
+      document
+        .getElementById("eventImageModalBg")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeEventImageModal();
+        });
+    </script>
   </body>
 </html>

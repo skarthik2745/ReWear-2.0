@@ -10,27 +10,175 @@
       rel="stylesheet"
     />
     <style>
+      /* Pale brown background for the entire page */
       body.gradient-bg {
         font-family: "Poppins", "Lato", "Roboto", sans-serif !important;
+        background: #f5f1eb !important;
       }
-      .header h1 {
+
+      /* Page title styling */
+      .page-title {
+        text-align: center;
+        margin: 30px auto 25px auto;
+        padding: 20px;
+        max-width: 600px;
+      }
+
+      .page-title h1 {
         font-family: "Poppins", "Lato", "Roboto", sans-serif !important;
-        font-size: 2.4rem;
+        font-size: 2.8rem;
         font-weight: 800;
-        color: #b3541e;
-        background: linear-gradient(90deg, #ff9800 30%, #b3541e 100%);
+        color: #8b4513;
+        background: linear-gradient(90deg, #d2691e 30%, #8b4513 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 8px #ffe0b2;
-        letter-spacing: 0.01em;
+        margin: 0;
+        text-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
+        letter-spacing: 0.02em;
         text-align: center;
-        border-bottom: 2.5px solid #ffb74d;
+        border-bottom: 3px solid #d2691e;
         display: inline-block;
-        padding-bottom: 0.3rem;
+        padding-bottom: 0.5rem;
       }
+
+      .page-title p {
+        font-size: 1.1rem;
+        color: #a0522d;
+        margin: 8px 0 0 0;
+        font-weight: 500;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* Enhanced filter bar styling */
+      .filter-bar {
+        background: #faf6f0 !important;
+        border: 2px solid #d2b48c !important;
+        border-radius: 15px !important;
+        box-shadow: 0 4px 20px rgba(139, 69, 19, 0.1) !important;
+        padding: 25px !important;
+        margin: 20px auto 30px auto !important;
+        max-width: 1200px !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+        position: relative !important;
+        z-index: 10 !important;
+      }
+
+      .filter-bar label {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        font-weight: 600 !important;
+        color: #8b4513 !important;
+        font-size: 1rem !important;
+        font-family: "Poppins", sans-serif !important;
+      }
+
+      .filter-bar input,
+      .filter-bar select {
+        padding: 12px 15px !important;
+        border: 2px solid #c47028 !important;
+        border-radius: 8px !important;
+        background: #fff !important;
+        font-size: 1rem !important;
+        font-family: "Poppins", sans-serif !important;
+        color: #4a4a4a !important;
+        transition: all 0.3s ease !important;
+        outline: none !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        display: block !important;
+      }
+
+      /* Specific styling for text inputs to ensure borders are visible */
+      .filter-bar input[type="text"] {
+        border: 2px solid #c47028 !important;
+        border-top: 2px solid #c47028 !important;
+        border-right: 2px solid #c47028 !important;
+        border-bottom: 2px solid #c47028 !important;
+        border-left: 2px solid #c47028 !important;
+        box-sizing: border-box !important;
+        -webkit-box-sizing: border-box !important;
+        -moz-box-sizing: border-box !important;
+      }
+
+      .filter-bar input:focus,
+      .filter-bar select:focus {
+        border-color: #d2691e !important;
+        box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      .filter-bar input:hover,
+      .filter-bar select:hover {
+        border-color: #cd853f !important;
+      }
+
+      /* Ensure text inputs maintain consistent border on blur */
+      .filter-bar input[type="text"]:not(:focus):not(:hover) {
+        border: 2px solid #c47028 !important;
+      }
+
+      /* Make the last two filters span to the next row */
+      .filter-bar label:nth-child(4),
+      .filter-bar label:nth-child(5) {
+        grid-column: span 1 !important;
+      }
+
+      /* Responsive design for filters */
+      @media (max-width: 900px) {
+        .filter-bar {
+          grid-template-columns: repeat(2, 1fr) !important;
+          gap: 15px !important;
+          padding: 20px !important;
+        }
+
+        .filter-bar label:nth-child(4) {
+          grid-column: 1 !important;
+        }
+
+        .filter-bar label:nth-child(5) {
+          grid-column: 2 !important;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .filter-bar {
+          grid-template-columns: 1fr !important;
+          gap: 15px !important;
+          padding: 15px !important;
+        }
+
+        .filter-bar label:nth-child(4),
+        .filter-bar label:nth-child(5) {
+          grid-column: 1 !important;
+        }
+
+        .page-title h1 {
+          font-size: 2.2rem !important;
+        }
+      }
+
+      /* Enhanced modal styling */
+      .modal-content {
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        padding: 25px !important;
+      }
+
+      .modal-left {
+        max-height: 60vh !important;
+        overflow-y: auto !important;
+      }
+
+      .modal-right img {
+        max-height: 300px !important;
+        object-fit: cover !important;
+      }
+
       @media (max-width: 700px) {
         .back-home {
           margin-right: 0.7rem;
@@ -73,47 +221,61 @@
       </div>
     </nav>
     <main>
+      <!-- Page Title Section -->
+      <div class="page-title">
+        <h1>Browse Clothes</h1>
+        <p>Explore and discover pre-loved clothing from our community</p>
+      </div>
+
       <form id="filterBar" class="filter-bar">
-        <label
-          >Cloth Name
-          <input type="text" id="filterName" placeholder="Search name"
-        /></label>
-        <label
-          >Category
+        <label>
+          Cloth Name
+          <input
+            type="text"
+            id="filterName"
+            placeholder="Search by cloth name"
+          />
+        </label>
+        <label>
+          Category
           <select id="filterCategory">
-            <option value="">All</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Kids</option>
-            <option>Others</option>
+            <option value="">All Categories</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Kids">Kids</option>
+            <option value="Others">Others</option>
           </select>
         </label>
-        <label
-          >Size
+        <label>
+          Size
           <select id="filterSize">
-            <option value="">All</option>
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-            <option>XXL</option>
+            <option value="">All Sizes</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
           </select>
         </label>
-        <label
-          >Condition
+        <label>
+          Condition
           <select id="filterCondition">
-            <option value="">All</option>
-            <option>Excellent (Freshly Washed, Almost New)</option>
-            <option>Good (Gently Used, No Damage)</option>
-            <option>Usable (Minor Fading or Shrink)</option>
-            <option>Repairable (Needs Stitching or Small Fix)</option>
-            <option>Vintage (Old but Classic)</option>
+            <option value="">All Conditions</option>
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Usable">Usable</option>
+            <option value="Repairable">Repairable</option>
+            <option value="Vintage">Vintage</option>
           </select>
         </label>
-        <label
-          >Location
-          <input type="text" id="filterLocation" placeholder="City or area"
-        /></label>
+        <label>
+          Location
+          <input
+            type="text"
+            id="filterLocation"
+            placeholder="Search by location"
+          />
+        </label>
       </form>
       <section id="clothesGrid" class="clothes-grid"></section>
       <div id="modal" class="modal">
@@ -129,11 +291,53 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="js/firebase.js"></script>
     <script src="js/browse.js"></script>
     <script>
-      // Add condition badges to cards if not already present (for UI only)
+      // Enhanced filter functionality and UI improvements
       document.addEventListener("DOMContentLoaded", function () {
+        console.log("Browse page loaded with enhanced UI");
+
+        // Ensure filter inputs are working properly
+        const filterInputs = document.querySelectorAll(
+          '#filterBar input[type="text"]'
+        );
+        const filterSelects = document.querySelectorAll("#filterBar select");
+
+        // Add event listeners to all filter inputs
+        filterInputs.forEach((input) => {
+          input.addEventListener("input", function () {
+            console.log("Filter input changed:", this.id, this.value);
+            // Trigger filtering if browse.js is loaded
+            if (typeof renderClothes === "function") {
+              renderClothes();
+            }
+          });
+
+          input.addEventListener("focus", function () {
+            this.style.borderColor = "#d2691e";
+            this.style.boxShadow = "0 0 0 3px rgba(210, 105, 30, 0.1)";
+          });
+
+          input.addEventListener("blur", function () {
+            this.style.borderColor = "#C47028";
+            this.style.boxShadow = "none";
+          });
+        });
+
+        // Add event listeners to all filter selects
+        filterSelects.forEach((select) => {
+          select.addEventListener("change", function () {
+            console.log("Filter select changed:", this.id, this.value);
+            // Trigger filtering if browse.js is loaded
+            if (typeof renderClothes === "function") {
+              renderClothes();
+            }
+          });
+        });
+
+        // Add condition badges to cards if not already present (for UI only)
         const observer = new MutationObserver(() => {
           document.querySelectorAll(".cloth-card").forEach((card) => {
             const info = card.querySelector(".cloth-info");
@@ -164,14 +368,33 @@
           childList: true,
           subtree: true,
         });
-      });
-      document.addEventListener("DOMContentLoaded", function () {
+
+        // Logout functionality
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", function () {
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = "login.html";
+          });
+        }
+
+        // Enhanced modal functionality
+        const modal = document.getElementById("modal");
+        const closeBtn = document.querySelector(".close-btn");
+
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function () {
+            modal.style.display = "none";
+          });
+        }
+
+        // Close modal when clicking outside
+        if (modal) {
+          modal.addEventListener("click", function (e) {
+            if (e.target === modal) {
+              modal.style.display = "none";
+            }
           });
         }
       });

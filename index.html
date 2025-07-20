@@ -3,43 +3,1072 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - ReWear</title>
+    <title>ReWear - Community Clothing Exchange Platform</title>
     <link rel="stylesheet" href="css/style.css" />
     <link
-      href="https://fonts.googleapis.com/css?family=Poppins:400,700|Lato:400,700|Roboto:400,700|Montserrat:400,600|Caveat:400,600|Lora:400,500&display=swap"
+      href="https://fonts.googleapis.com/css?family=Poppins:400,600,700,800|Montserrat:400,600,700|Quicksand:400,600,700&display=swap"
       rel="stylesheet"
     />
     <style>
-      body.gradient-bg {
-        font-family: "Poppins", "Lato", "Roboto", sans-serif !important;
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      .header h1 {
-        font-family: "Poppins", "Lato", "Roboto", sans-serif !important;
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: #b3541e;
-        background: linear-gradient(90deg, #ff9800 30%, #b3541e 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 8px #ffe0b2;
-        letter-spacing: 0.01em;
-        text-align: center;
-        border-bottom: 2.5px solid #ffb74d;
-        display: inline-block;
-        padding-bottom: 0.3rem;
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        overflow-x: hidden;
       }
-      @media (max-width: 700px) {
-        .back-home {
-          margin-right: 0.7rem;
+
+      /* Hero Section */
+      .hero-section {
+        background: linear-gradient(135deg, #e6f9e6 0%, #d0f0c0 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-bg-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            circle at 20% 80%,
+            rgba(120, 200, 120, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(100, 180, 100, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(140, 220, 140, 0.05) 0%,
+            transparent 50%
+          );
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
         }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      .hero-content {
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        max-width: 800px;
+        padding: 2rem;
+      }
+
+      .hero-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: -0.9rem;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .hero-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 3px solid #006400;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero-title {
+        font-size: 7rem;
+        font-weight: 800;
+        color: #006400;
+        margin: 0;
+        animation: fadeInUp 1s ease-out;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-platform-title {
+        font-size: 1.6rem;
+        color: #1a1a1a;
+        margin-bottom: 2.5rem;
+        animation: fadeInUp 1s ease-out 0.2s both;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-subtitle {
+        font-size: 1.4rem;
+        color: #1a1a1a;
+        margin-bottom: 3.5rem;
+        animation: fadeInUp 1s ease-out 0.3s both;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 1s ease-out 0.6s both;
+      }
+
+      .hero-btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-btn.primary {
+        background: linear-gradient(135deg, #006400, #145a32);
+        color: white;
+      }
+
+      .hero-btn.secondary {
+        background: white;
+        color: #006400;
+        border: 2px solid #006400;
+      }
+
+      .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .hero-btn.primary:hover {
+        background: linear-gradient(135deg, #145a32, #006400);
+      }
+
+      .hero-btn.secondary:hover {
+        background: #006400;
+        color: white;
+      }
+
+      /* Section Styles */
+      .section {
+        padding: 5rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #006400;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #006400, #90ee90);
+        border-radius: 2px;
+      }
+
+      .section-subtitle {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 3rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Mission Section */
+      .mission-section {
+        background: white;
+      }
+
+      .mission-content {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #555;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto 3rem auto;
+      }
+
+      .mission-highlights {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-top: 2rem;
+      }
+
+      .highlight-card {
+        padding: 1.5rem;
+        border-radius: 18px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .highlight-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      .highlight-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .highlight-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+      }
+
+      .highlight-desc {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      /* Individual card styling */
+      .highlight-card.community {
+        background: linear-gradient(135deg, #d5f7d5, #c3e8c3);
+        border: 1px solid #a8d8a8;
+      }
+
+      .highlight-card.circular {
+        background: linear-gradient(135deg, #e2f2fd, #c7e9f8);
+        border: 1px solid #a8d1f0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      .highlight-card.badges {
+        background: linear-gradient(135deg, #fff4d1, #ffe8a3);
+        border: 1px solid #f0d080;
+      }
+
+      .highlight-card.badges .highlight-icon {
+        background: linear-gradient(135deg, #ffd700, #ffed4e);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+      }
+
+      .highlight-card.verified {
+        background: linear-gradient(135deg, #f3eaff, #e0d1f7);
+        border: 1px solid #c7b3e8;
+        border-radius: 20px;
+      }
+
+      .highlight-card.ngos {
+        background: linear-gradient(135deg, #dcfdf2, #bdf7e5);
+        border: 1px solid #a8e8d0;
+        position: relative;
+      }
+
+      .highlight-card.ngos::before {
+        content: "🌍";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5rem;
+        opacity: 0.1;
+        z-index: 0;
+      }
+
+      .highlight-card.ngos .highlight-icon,
+      .highlight-card.ngos .highlight-title,
+      .highlight-card.ngos .highlight-desc {
+        position: relative;
+        z-index: 1;
+      }
+
+      .highlight-card.track {
+        background: linear-gradient(135deg, #ffe5d9, #ffd1b3);
+        border: 1px solid #ffb366;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08),
+          0 0 0 1px rgba(255, 255, 255, 0.5);
+      }
+
+      .highlight-card.track .highlight-icon {
+        background: rgba(255, 255, 255, 0.3);
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+
+      .highlight-card.impact {
+        background: linear-gradient(135deg, #e7e9ff, #ccd0fa);
+        border: 1px solid #b3b8f0;
+        backdrop-filter: blur(5px);
+        position: relative;
+      }
+
+      .highlight-card.impact::after {
+        content: "🏆";
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 1rem;
+        opacity: 0.6;
+      }
+
+      .highlight-card.features {
+        background: linear-gradient(135deg, #f0f4f8, #d8f0e4);
+        border: 1px solid #c0e0d0;
+      }
+
+      .highlight-card.features .highlight-icon {
+        background: linear-gradient(135deg, #4a90e2, #357abd);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        font-size: 1.5rem;
+        box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+      }
+
+      /* How It Works Section */
+      .how-it-works {
+        background: linear-gradient(135deg, #f8faf8 0%, #f0f8f0 100%);
+      }
+
+      .steps-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .step-card {
+        background: linear-gradient(135deg, #f5fff5, #e6ffe6);
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .step-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .step-number {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #006400, #145a32);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+      }
+
+      .step-card:hover .step-number {
+        transform: translateX(-50%) scale(1.05);
+      }
+
+      .step-icon {
+        font-size: 36px;
+        margin: 1rem 0;
+        display: block;
+      }
+
+      .icon-circle {
+        background-color: #d9fdd3;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .step-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #006400;
+        margin-bottom: 0.5rem;
+      }
+
+      .step-desc {
+        color: #555;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      /* Features Section */
+      .features-section {
+        background: linear-gradient(
+          135deg,
+          #f8fbff 0%,
+          #f0f8ff 50%,
+          #e8f4ff 100%
+        );
+        position: relative;
+      }
+
+      .features-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 30% 20%,
+            rgba(135, 206, 250, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 70% 80%,
+            rgba(173, 216, 230, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+      }
+
+      .features-section .section-title {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .features-section .section-title::before {
+        content: "✨";
+        font-size: 1.5rem;
+      }
+
+      .features-section .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, #87ceeb, #98d8e8, #87ceeb);
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(135, 206, 235, 0.3);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .feature-card {
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
+        pointer-events: none;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+      }
+
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+      }
+
+      .feature-title::before {
+        font-size: 1.8rem;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+      }
+
+      .feature-desc {
+        color: #333;
+        line-height: 1.7;
+        margin-bottom: 1.2rem;
+        font-size: 1rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .feature-list li {
+        padding: 0.4rem 0;
+        color: #444;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .feature-list li::before {
+        content: "✅";
+        font-size: 1rem;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+      }
+
+      /* Individual feature card styling */
+      .feature-card.donate {
+        background: linear-gradient(135deg, #e8f5e8, #d4edda);
+        border: 1px solid #b8d4c1;
+      }
+
+      .feature-card.donate .feature-title::before {
+        content: "👜";
+      }
+
+      .feature-card.browse {
+        background: linear-gradient(135deg, #ffe8e8, #ffd4d4);
+        border: 1px solid #d4b8b8;
+      }
+
+      .feature-card.browse .feature-title::before {
+        content: "🔍";
+      }
+
+      .feature-card.profile {
+        background: linear-gradient(135deg, #e8e8ff, #d4d4ed);
+        border: 1px solid #b8b8d4;
+      }
+
+      .feature-card.profile .feature-title::before {
+        content: "👤";
+      }
+
+      .feature-card.messages {
+        background: linear-gradient(135deg, #fff8e8, #ffe8d4);
+        border: 1px solid #d4c8b8;
+      }
+
+      .feature-card.messages .feature-title::before {
+        content: "💬";
+      }
+
+      .feature-card.impact {
+        background: linear-gradient(135deg, #f0e8ff, #e8d4ff);
+        border: 1px solid #d4b8e8;
+      }
+
+      .feature-card.impact .feature-title::before {
+        content: "🏆";
+      }
+
+      .feature-card.events {
+        background: linear-gradient(135deg, #e8fff0, #d4ffe8);
+        border: 1px solid #b8d4c8;
+      }
+
+      .feature-card.events .feature-title::before {
+        content: "📅";
+      }
+
+      /* Testimonials Section */
+      .testimonials-section {
+        background: #fafafa;
+      }
+
+      .testimonials-section .section-title::after {
+        background: linear-gradient(90deg, #006400, #90ee90);
+        height: 3px;
+      }
+
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 3rem;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .testimonial-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 200px;
+      }
+
+      .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Individual card colors */
+      .testimonial-card.card-1 {
+        background: #fff3e0;
+        border: 2px solid #ffb74d;
+      }
+
+      .testimonial-card.card-2 {
+        background: #e3f2fd;
+        border: 2px solid #64b5f6;
+      }
+
+      .testimonial-card.card-3 {
+        background: #f1f8e9;
+        border: 2px solid #81c784;
+      }
+
+      .testimonial-card.card-4 {
+        background: #fce4ec;
+        border: 2px solid #f48fb1;
+      }
+
+      .testimonial-card.card-5 {
+        background: #fffde7;
+        border: 2px solid #ffd54f;
+      }
+
+      .testimonial-card.card-6 {
+        background: #ede7f6;
+        border: 2px solid #b39ddb;
+      }
+
+      .testimonial-quote {
+        font-size: 1rem;
+        color: #333;
+        font-style: italic;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+        font-family: "Georgia", serif;
+        flex-grow: 1;
+      }
+
+      .testimonial-author {
+        font-weight: 700;
+        color: #2e7d32;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .testimonial-location {
+        color: #666;
+        font-size: 0.85rem;
+        font-weight: 400;
+      }
+
+      /* Stats Section */
+      .stats-section {
+        background: linear-gradient(135deg, #ffe0b2, #ffcc80);
+        color: #e65100;
+        text-align: center;
+      }
+
+      .stats-section .section-title {
+        color: #e65100;
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-section .section-title::after {
+        background: linear-gradient(90deg, #ff9800, #ffb74d);
+        height: 3px;
+      }
+
+      .stats-section .section-subtitle {
+        color: #bf360c;
+        font-size: 1.3rem;
+        margin-bottom: 3rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .stat-card {
+        background: #fff8e1;
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(255, 152, 0, 0.15);
+        border: 2px solid #ffb74d;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(255, 152, 0, 0.25);
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #ff9800, #ffb74d);
+      }
+
+      .stat-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #e65100;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .stat-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #e65100;
+        display: block;
+        text-shadow: 2px 2px 4px rgba(255, 152, 0, 0.2);
+      }
+
+      /* Safety Section */
+      .safety-section {
+        background: white;
+      }
+
+      .safety-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .safety-card {
+        background: linear-gradient(135deg, #f0f8f0, #e6f9e6);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #d0f0c0;
+      }
+
+      .safety-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .safety-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #006400;
+        margin-bottom: 0.5rem;
+      }
+
+      .safety-desc {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .hero-header {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .hero-logo {
+          width: 90px;
+          height: 90px;
+        }
+
+        .hero-title {
+          font-size: 3.5rem;
+        }
+
+        .hero-platform-title {
+          font-size: 1.3rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .hero-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .section {
+          padding: 3rem 1rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .steps-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .mission-highlights {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+        }
+
+        .stat-card {
+          padding: 2rem 1.5rem;
+        }
+
+        .stat-number {
+          font-size: 2.8rem;
+        }
+
+        .testimonials-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+        }
+
+        .testimonial-card {
+          padding: 18px;
+          min-height: 180px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-header {
+          gap: 0.3rem;
+        }
+
+        .hero-logo {
+          width: 55px;
+          height: 55px;
+        }
+
+        .hero-title {
+          font-size: 3rem;
+        }
+
+        .hero-platform-title {
+          font-size: 1.1rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1rem;
+        }
+
+        .mission-highlights {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .highlight-card {
+          padding: 1.2rem;
+        }
+
+        .highlight-title {
+          font-size: 1.1rem;
+        }
+
+        .highlight-desc {
+          font-size: 0.85rem;
+        }
+
+        .steps-container {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .step-card {
+          padding: 16px;
+        }
+
+        .step-title {
+          font-size: 18px;
+        }
+
+        .step-desc {
+          font-size: 13px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .stat-card {
+          padding: 1.5rem 1rem;
+        }
+
+        .stat-number {
+          font-size: 2.5rem;
+        }
+
+        .stat-label {
+          font-size: 1rem;
+        }
+
+        .testimonials-grid {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+
+        .testimonial-card {
+          padding: 16px;
+          min-height: 160px;
+        }
+
+        .testimonial-quote {
+          font-size: 0.95rem;
+        }
+
+        .icon-circle {
+          width: 50px;
+          height: 50px;
+        }
+
+        .step-icon {
+          font-size: 28px;
+        }
+      }
+
+      /* Navigation Override */
+      .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-section {
+        padding-top: 80px;
       }
     </style>
   </head>
-  <body class="gradient-bg">
-    <div class="bg-texture"></div>
+  <body>
+    <!-- Navigation -->
     <nav class="navbar">
       <div class="nav-left">
         <ul class="nav-links">
@@ -72,42 +1101,384 @@
         <a href="#" id="logoutBtn" class="nav-btn logout-nav-btn">Logout</a>
       </div>
     </nav>
-    <main>
-      <section style="text-align: center; margin: 3rem 0">
-        <h1 class="header">Welcome to ReWear!</h1>
-        <p
-          style="
-            font-size: 1.2rem;
-            color: #b3541e;
-            margin: 1.5rem auto;
-            max-width: 600px;
-          "
-        >
-          Discover, donate, and browse pre-loved clothes. Join our community to
-          make a positive impact on the environment and help others. Use the
-          navigation above to get started!
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-bg-pattern"></div>
+      <div class="hero-content">
+        <div class="hero-header">
+          <img
+            src="assets/logo/logo2.jpg"
+            alt="ReWear Logo"
+            class="hero-logo"
+          />
+          <h1 class="hero-title">ReWear</h1>
+        </div>
+        <h2 class="hero-platform-title">
+          A Community Clothing Exchange Platform
+        </h2>
+        <p class="hero-subtitle">
+          ♻️ Give with Kindness. Receive with Dignity. Rewarded by Impact. ♻️
         </p>
-        <img
-          src="assets/images/hero-clothes.png"
-          alt="ReWear Hero"
-          style="
-            max-width: 320px;
-            width: 100%;
-            margin: 2rem auto;
-            display: block;
-          "
-        />
-      </section>
-    </main>
+        <div class="hero-buttons">
+          <a href="donate.html" class="hero-btn primary">🧥 Donate Clothes</a>
+          <a href="browse.html" class="hero-btn secondary">🧺 Browse Clothes</a>
+          <a href="register.html" class="hero-btn secondary"
+            >💌 Join Our Community</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="section mission-section">
+      <h2 class="section-title">Why ReWear?</h2>
+      <p class="section-subtitle">
+        Our mission is to create a sustainable, caring community through
+        clothing exchange
+      </p>
+
+      <div class="mission-content">
+        ReWear is a mission-driven platform that connects people who want to
+        donate clothes with those in need. Through a transparent, rewarding
+        system, we ensure every donation is meaningful — with trackable
+        requests, verified completions, and impactful badges.
+      </div>
+
+      <div class="mission-highlights">
+        <div class="highlight-card community">
+          <span class="highlight-icon">🤝</span>
+          <h3 class="highlight-title">Community Driven</h3>
+          <p class="highlight-desc">
+            Built by the community, for the community
+          </p>
+        </div>
+        <div class="highlight-card circular">
+          <span class="highlight-icon">🔁</span>
+          <h3 class="highlight-title">Circular Economy</h3>
+          <p class="highlight-desc">Reduce waste, promote sustainability</p>
+        </div>
+        <div class="highlight-card badges">
+          <span class="highlight-icon">🎖️</span>
+          <h3 class="highlight-title">Earn Points & Badges</h3>
+          <p class="highlight-desc">Get rewarded for your contributions</p>
+        </div>
+        <div class="highlight-card verified">
+          <span class="highlight-icon">🧑‍🤝‍🧑</span>
+          <h3 class="highlight-title">Verified Donors & Receivers</h3>
+          <p class="highlight-desc">Safe and trusted exchanges</p>
+        </div>
+        <div class="highlight-card ngos">
+          <span class="highlight-icon">🌍</span>
+          <h3 class="highlight-title">Supporting NGOs & Local Events</h3>
+          <p class="highlight-desc">Extending help to those in need</p>
+        </div>
+        <div class="highlight-card track">
+          <span class="highlight-icon">📦</span>
+          <h3 class="highlight-title">Track Your Donations</h3>
+          <p class="highlight-desc">Stay updated on donation request status</p>
+        </div>
+        <div class="highlight-card impact">
+          <span class="highlight-icon">📊</span>
+          <h3 class="highlight-title">View Your Impact</h3>
+          <p class="highlight-desc">
+            See how much you've contributed to the community
+          </p>
+        </div>
+        <div class="highlight-card features">
+          <span class="highlight-icon">⚙️</span>
+          <h3 class="highlight-title">User-Friendly Features</h3>
+          <p class="highlight-desc">
+            Easy to use with responsive design & accessibility
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">
+        Simple steps to make a difference in someone's life
+      </p>
+
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="icon-circle">
+            <span class="step-icon">🧥</span>
+          </div>
+          <h3 class="step-title">Donate</h3>
+          <p class="step-desc">Fill details of your clothes and submit</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="icon-circle">
+            <span class="step-icon">👀</span>
+          </div>
+          <h3 class="step-title">Browse</h3>
+          <p class="step-desc">Look through donated items using filters</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="icon-circle">
+            <span class="step-icon">📩</span>
+          </div>
+          <h3 class="step-title">Request</h3>
+          <p class="step-desc">Request a cloth you like or need</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="icon-circle">
+            <span class="step-icon">✅</span>
+          </div>
+          <h3 class="step-title">Approve</h3>
+          <p class="step-desc">Donors accept/decline requests</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">5</div>
+          <div class="icon-circle">
+            <span class="step-icon">🎉</span>
+          </div>
+          <h3 class="step-title">Complete</h3>
+          <p class="step-desc">Once delivered, status is updated</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">6</div>
+          <div class="icon-circle">
+            <span class="step-icon">🏅</span>
+          </div>
+          <h3 class="step-title">Reward</h3>
+          <p class="step-desc">Earn points, badges & leaderboard ranking</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Overview Section -->
+    <section class="section features-section">
+      <h2 class="section-title">Feature Overview</h2>
+      <p class="section-subtitle">
+        Explore all the powerful features ReWear offers
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card donate">
+          <h3 class="feature-title">Donate Page</h3>
+          <p class="feature-desc">
+            On this page, users can enter cloth details such as type, size,
+            color, description, and image. They can choose how many clothes they
+            want to donate. Upon submission, the clothes become available in the
+            Browse section.
+          </p>
+        </div>
+
+        <div class="feature-card browse">
+          <h3 class="feature-title">Browse Page</h3>
+          <p class="feature-desc">
+            Here, users can see all available clothes with filters like size,
+            gender, age group, location, etc. If they like any item, they can
+            click "Request This Cloth" to initiate a request.
+          </p>
+        </div>
+
+        <div class="feature-card profile">
+          <h3 class="feature-title">Profile Page</h3>
+          <p class="feature-desc">Personalized profile where users can:</p>
+          <ul class="feature-list">
+            <li>View and edit their profile info 👤</li>
+            <li>See how many successful donations they've made ✔️</li>
+            <li>Edit/delete their cloth listings ✏️🗑️</li>
+            <li>View badges and rewards 🏅</li>
+          </ul>
+          <p class="feature-desc">
+            <strong>✅ Note:</strong> Only donations marked as "Completed" in
+            the Request database count as successful.
+          </p>
+        </div>
+
+        <div class="feature-card messages">
+          <h3 class="feature-title">Message Page</h3>
+          <p class="feature-desc">Crucial communication hub:</p>
+          <ul class="feature-list">
+            <li>View all sent requests and their status 📤</li>
+            <li>View all requests received for their clothes 📥</li>
+            <li>Approve or decline requests 🔁</li>
+            <li>Track all cloth interactions 📬</li>
+          </ul>
+        </div>
+
+        <div class="feature-card impact">
+          <h3 class="feature-title">Impact Board Page</h3>
+          <p class="feature-desc">The leaderboard section! 🌟</p>
+          <ul class="feature-list">
+            <li>Shows top donors based on completed requests and points</li>
+            <li>Badge showcase system (gold/silver/bronze) 🎖️</li>
+            <li>
+              Total impact metrics (e.g., "500 clothes donated by 100 members!")
+            </li>
+          </ul>
+          <p class="feature-desc">
+            <strong>✅ Same logic:</strong> Only completed requests increase
+            points and rank.
+          </p>
+        </div>
+
+        <div class="feature-card events">
+          <h3 class="feature-title">Events Page</h3>
+          <p class="feature-desc">
+            A community corner for NGOs, orphanages, and groups to:
+          </p>
+          <ul class="feature-list">
+            <li>Post cloth donation event posters 📌</li>
+            <li>Describe their mission & needs</li>
+            <li>Allow users to register & support the events 📝</li>
+            <li>Engage with real-world initiatives 🌍</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials-section">
+      <h2 class="section-title">What Our Community Says</h2>
+      <p class="section-subtitle">
+        Real stories from real people making a difference
+      </p>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card card-1">
+          <p class="testimonial-quote">
+            "This platform helped our orphanage receive warm clothes for winter.
+            Truly a blessing!"
+          </p>
+          <div class="testimonial-author">Rajeshwari</div>
+          <div class="testimonial-location">Coimbatore</div>
+        </div>
+        <div class="testimonial-card card-2">
+          <p class="testimonial-quote">
+            "I had extra unused clothes lying around. ReWear made donating so
+            easy and fulfilling!"
+          </p>
+          <div class="testimonial-author">Aakash Mehta</div>
+          <div class="testimonial-location">Pune</div>
+        </div>
+        <div class="testimonial-card card-3">
+          <p class="testimonial-quote">
+            "Thanks to ReWear, we could collect clothes for the local old age
+            home. Very thoughtful initiative."
+          </p>
+          <div class="testimonial-author">Rani Kumari</div>
+          <div class="testimonial-location">Jaipur</div>
+        </div>
+        <div class="testimonial-card card-4">
+          <p class="testimonial-quote">
+            "This app is a great bridge between donors and people in need. Clean
+            and simple to use."
+          </p>
+          <div class="testimonial-author">Dev Sharma</div>
+          <div class="testimonial-location">Nagpur</div>
+        </div>
+        <div class="testimonial-card card-5">
+          <p class="testimonial-quote">
+            "We used ReWear's event feature to collect over 200 clothes for
+            rural schools. Amazing tool!"
+          </p>
+          <div class="testimonial-author">Sneha Thomas</div>
+          <div class="testimonial-location">Kochi</div>
+        </div>
+        <div class="testimonial-card card-6">
+          <p class="testimonial-quote">
+            "I earned badges for helping others – such a motivating and kind way
+            to reward users!"
+          </p>
+          <div class="testimonial-author">Farhan Ali</div>
+          <div class="testimonial-location">Hyderabad</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Impact Stats Section -->
+    <section class="section stats-section">
+      <h2 class="section-title">Live Impact Stats</h2>
+      <p class="section-subtitle">
+        Real-time statistics of our community's impact
+      </p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">👕 Total Clothes Donated</div>
+          <span class="stat-number" id="totalClothes">0</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">👤 Number of Users</div>
+          <span class="stat-number" id="numberOfUsers">0</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">📦 Successful Requests Completed</div>
+          <span class="stat-number" id="completedRequests">0</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">🎉 Ongoing Events</div>
+          <span class="stat-number" id="successfulEvents">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Safety and Trust Section -->
+    <section class="section safety-section">
+      <h2 class="section-title">Safety and Trust</h2>
+      <p class="section-subtitle">
+        Your safety and trust are our top priorities
+      </p>
+
+      <div class="safety-grid">
+        <div class="safety-card">
+          <span class="safety-icon">✅</span>
+          <h3 class="safety-title">Verified Users</h3>
+          <p class="safety-desc">
+            All users are verified through our secure authentication system
+          </p>
+        </div>
+        <div class="safety-card">
+          <span class="safety-icon">🟢</span>
+          <h3 class="safety-title">Transparent Request Status</h3>
+          <p class="safety-desc">
+            Track every request from initiation to completion
+          </p>
+        </div>
+        <div class="safety-card">
+          <span class="safety-icon">🚫</span>
+          <h3 class="safety-title">No Resale Policy</h3>
+          <p class="safety-desc">
+            Strict policy against reselling donated clothes
+          </p>
+        </div>
+        <div class="safety-card">
+          <span class="safety-icon">🤝</span>
+          <h3 class="safety-title">Respectful Exchange Only</h3>
+          <p class="safety-desc">
+            Community guidelines ensure respectful interactions
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
-      <p>&copy; 2024 ReWear. All rights reserved.</p>
+      <p>
+        &copy; 2024 ReWear. All rights reserved. | Community Clothing Exchange
+        Platform
+      </p>
     </footer>
+
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="js/firebase.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // Logout functionality
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
           logoutBtn.addEventListener("click", function () {
@@ -116,7 +1487,98 @@
             window.location.href = "login.html";
           });
         }
+
+        // Load live stats from Firebase
+        loadLiveStats();
+
+        // Add scroll animations
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("fade-in");
+            }
+          });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll(".section").forEach((section) => {
+          observer.observe(section);
+        });
       });
+
+      // Function to load live stats from Firebase
+      function loadLiveStats() {
+        if (!window.db) {
+          console.log("Firebase not available, using static stats");
+          return;
+        }
+
+        // Load cumulative total clothes donated from stats collection
+        const statsRef = window.db.ref("stats");
+        statsRef.once("value").then(function (snapshot) {
+          if (snapshot.exists() && snapshot.val().totalClothesDonated) {
+            const totalClothes = snapshot.val().totalClothesDonated;
+            document.getElementById("totalClothes").textContent = totalClothes;
+          } else {
+            // Fallback: count current donations if stats not available
+            const donationsRef = window.db.ref("donations");
+            donationsRef.once("value").then(function (donationsSnapshot) {
+              const totalClothes = donationsSnapshot.exists()
+                ? donationsSnapshot.numChildren()
+                : 0;
+              document.getElementById("totalClothes").textContent =
+                totalClothes;
+            });
+          }
+        });
+
+        // Load number of users (total registered users)
+        const usersRef = window.db.ref("users");
+        usersRef.once("value").then(function (snapshot) {
+          const numberOfUsers = snapshot.exists() ? snapshot.numChildren() : 0;
+          document.getElementById("numberOfUsers").textContent = numberOfUsers;
+        });
+
+        // Load cumulative successful requests completed from stats collection
+        statsRef.once("value").then(function (snapshot) {
+          if (snapshot.exists() && snapshot.val().successfulRequests) {
+            const completedCount = snapshot.val().successfulRequests;
+            document.getElementById("completedRequests").textContent =
+              completedCount;
+          } else {
+            // Fallback: count current completed requests if stats not available
+            const requestsRef = window.db.ref("requests");
+            requestsRef.once("value").then(function (requestsSnapshot) {
+              let completedCount = 0;
+              if (requestsSnapshot.exists()) {
+                requestsSnapshot.forEach(function (childSnapshot) {
+                  const request = childSnapshot.val();
+                  if (request.status === "completed") {
+                    completedCount++;
+                  }
+                });
+              }
+              document.getElementById("completedRequests").textContent =
+                completedCount;
+            });
+          }
+        });
+
+        // Load successful events
+        const eventsRef = window.db.ref("events");
+        eventsRef.once("value").then(function (snapshot) {
+          const successfulEvents = snapshot.exists()
+            ? snapshot.numChildren()
+            : 0;
+          document.getElementById("successfulEvents").textContent =
+            successfulEvents;
+        });
+      }
     </script>
   </body>
 </html>

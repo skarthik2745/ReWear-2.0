@@ -149,120 +149,167 @@ form#eventForm {
 
 .events-list {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 1.5rem;
-  justify-content: center;
   margin-top: 1.2rem;
 }
 
+/* --- Event Card Layout & Spacing --- */
 .event-card {
   background: #fff;
-  border-radius: 1.2rem;
-  box-shadow: 0 2px 8px rgba(32, 47, 74, 0.1);
-  padding: 1.2rem 1.5rem;
-  min-width: 280px;
-  max-width: 380px;
-  text-align: left;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e0e0e0;
+  padding: 1.5rem 2rem 1.5rem 2rem;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 900px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 1.08rem;
-  color: #202f4a;
+  align-items: stretch;
+  gap: 1.5rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .event-card {
+    padding: 1rem;
+    max-width: 100%;
+  }
+}
+
+/* --- Event Title --- */
+.event-title {
+  font-size: 1.5rem;
+  font-family: "Poppins", "Nunito", "Open Sans", sans-serif;
+  font-weight: 700;
+  color: #1e88e5;
+  margin-bottom: 0.3rem;
+}
+
+/* --- Event Details --- */
+.event-meta,
+.event-desc {
+  font-size: 16px;
+  color: #555;
+  font-family: "Poppins", "Nunito", "Open Sans", sans-serif;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.event-meta .emoji,
+.clothes-needed .emoji {
+  font-size: 1.1em;
+  margin-right: 0.3em;
+}
+
+.clothes-needed {
+  background: #f0f8ff;
+  color: #1e88e5;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 16px;
   font-weight: 500;
-  position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.event-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(32, 47, 74, 0.15);
-}
-
-.event-card .event-poster {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 0.8rem;
-  margin-bottom: 0.7rem;
-  background: #b0b8d1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.event-card .event-title {
-  font-size: 1.18rem;
-  font-weight: 700;
-  color: #202f4a;
-  margin-bottom: 0.2rem;
-}
-
-.event-card .event-meta {
-  font-size: 0.98rem;
-  color: #6c63ff;
-  margin-bottom: 0.2rem;
-}
-
-.event-card .event-desc {
-  font-size: 0.99rem;
-  color: #202f4a;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-}
-
-.event-card .clothes-needed {
-  font-size: 0.97rem;
-  color: #e91e63;
-  margin-bottom: 0.5rem;
-  background: #fce4ec;
-  padding: 0.3rem 0.6rem;
-  border-radius: 0.5rem;
   display: inline-block;
+  margin-bottom: 0.4rem;
 }
 
-.event-card .event-actions {
-  display: flex;
-  gap: 0.7rem;
-  margin-top: 0.7rem;
-  width: 100%;
-}
-
+/* --- Buttons --- */
 .event-card .event-btn {
-  background: #6c63ff;
-  color: #fff;
-  border-radius: 1.2rem;
-  font-weight: 700;
-  font-size: 1.01rem;
-  padding: 0.5rem 1.1rem;
-  border: none;
-  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-  cursor: pointer;
-  flex: 1;
-  text-align: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: "Poppins", "Nunito", "Open Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: filter 0.2s;
 }
-
-.event-card .event-btn.green {
-  background: #4caf50;
-  color: #fff;
-}
-
-.event-card .event-btn.pink {
-  background: #e91e63;
-  color: #fff;
-}
-
 .event-card .event-btn:hover {
-  background: #5e5b8c;
-  color: #fff;
-  transform: translateY(-1px);
+  filter: brightness(90%);
 }
 
-.event-card .event-btn.green:hover {
-  background: #388e3c;
-  color: #fff;
+/* --- Poster Image --- */
+.event-card .event-poster {
+  width: 35%;
+  max-width: 220px;
+  min-width: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  align-self: center;
 }
 
-.event-card .event-btn.pink:hover {
-  background: #ad1457;
-  color: #fff;
+@media (max-width: 700px) {
+  .event-card {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .event-card .event-poster {
+    width: 100%;
+    max-width: none;
+    margin-top: 1rem;
+  }
+}
+
+/* --- Modal for Poster Image --- */
+.event-image-modal-bg {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+}
+.event-image-modal-bg.active {
+  display: flex;
+}
+.event-image-modal {
+  position: relative;
+  background: transparent;
+  border-radius: 16px;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.event-image-modal img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  background: #fff;
+}
+.event-image-modal .close-modal-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #fff;
+  color: #2c3e50;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.event-image-modal .close-modal-btn:hover {
+  background: #f5f5f5;
+}
+
+/* --- Dashboard Consistency --- */
+#yourEventsList .event-card {
+  margin-bottom: 1.5rem;
 }
 
 /* Modal for participation */
@@ -389,6 +436,21 @@ form#eventForm {
   .event-card {
     min-width: 100%;
     max-width: 100%;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .event-card .event-content {
+    padding-right: 0;
+    padding-bottom: 1rem;
+  }
+
+  .event-card .event-poster {
+    width: 100%;
+    max-width: none;
+    max-height: 200px;
+    margin-top: 1rem;
+    order: -1;
   }
 
   .event-modal {
@@ -680,6 +742,19 @@ form#eventForm {
 }
 
 @media (max-width: 480px) {
+  .event-card {
+    padding: 1rem;
+  }
+
+  .event-card .event-content {
+    padding-bottom: 0.8rem;
+  }
+
+  .event-card .event-poster {
+    max-height: 150px;
+    margin-top: 0.8rem;
+  }
+
   .event-card .event-actions {
     flex-direction: column;
     gap: 0.5rem;
@@ -747,4 +822,186 @@ form#eventForm {
     width: 50px;
     height: 50px;
   }
+}
+
+/* --- Event Page Button Color Fixes --- */
+.event-card .event-btn,
+#yourEventsList .event-btn {
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #fff;
+  border: none;
+  box-shadow: none;
+  transition: background-color 0.2s ease-in-out, filter 0.2s;
+  cursor: pointer;
+}
+.event-card .event-btn.green,
+#yourEventsList .event-btn.green {
+  background: #4caf50;
+}
+.event-card .event-btn.pink,
+#yourEventsList .event-btn.pink {
+  background: #e91e63;
+}
+.event-card .event-btn:hover,
+#yourEventsList .event-btn:hover {
+  filter: brightness(90%);
+}
+
+/* Dashboard specific: View Participants and Delete Event */
+#yourEventsList .event-btn.green {
+  background: #4caf50;
+}
+#yourEventsList .event-btn.pink {
+  background: #e91e63;
+}
+
+/* --- Event Card Structure & Field Styling --- */
+.event-content {
+  font-family: "Poppins", "Nunito", "Open Sans", sans-serif;
+  width: 100%;
+}
+.event-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-family: "Poppins", "Nunito", "Open Sans", sans-serif;
+}
+.event-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.18rem;
+  font-size: 1rem;
+  color: #555;
+}
+.event-label {
+  font-weight: 600;
+  margin-right: 0.4em;
+  color: #1e88e5;
+  font-size: 1.01em;
+}
+.event-value {
+  font-weight: 400;
+  color: #2c3e50;
+}
+.event-deadline {
+  color: #d32f2f !important;
+  font-weight: 700;
+}
+.event-desc {
+  margin: 0.7rem 0 0.5rem 0;
+  font-size: 1.05rem;
+  color: #444;
+  line-height: 1.6;
+}
+.clothes-needed-badges {
+  margin: 0.5rem 0 0.7rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+.clothes-badge {
+  display: inline-block;
+  font-size: 0.98em;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 2px;
+  color: #2c3e50;
+  background: #f5f5f5;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+}
+/* --- Colorful badge backgrounds by type --- */
+.clothes-badge-children {
+  background: #ffe0b2;
+  color: #6d4c41;
+}
+.clothes-badge-adult {
+  background: #e1bee7;
+  color: #4527a0;
+}
+.clothes-badge-babyclothes {
+  background: #f8bbd0;
+  color: #ad1457;
+}
+.clothes-badge-winter {
+  background: #bbdefb;
+  color: #1565c0;
+}
+.clothes-badge-dailywear {
+  background: #c8e6c9;
+  color: #388e3c;
+}
+.clothes-badge-sportswear {
+  background: #b2ebf2;
+  color: #00838f;
+}
+.clothes-badge-traditionalwear {
+  background: #ffe082;
+  color: #e65100;
+}
+.clothes-badge-scarvesandshawls {
+  background: #d1c4e9;
+  color: #512da8;
+}
+.clothes-badge-footwear {
+  background: #ffccbc;
+  color: #bf360c;
+}
+.clothes-badge-accessories {
+  background: #f0f4c3;
+  color: #827717;
+}
+.clothes-badge-other {
+  background: #f5f5f5;
+  color: #616161;
+}
+
+@media (max-width: 700px) {
+  .event-title {
+    font-size: 1.2rem;
+  }
+  .event-field {
+    font-size: 0.97rem;
+  }
+  .event-desc {
+    font-size: 1rem;
+  }
+  .clothes-badge {
+    font-size: 0.93em;
+    padding: 4px 10px;
+  }
+}
+
+/* --- Event Card UI Final Enhancements --- */
+.event-title {
+  font-size: 1.625rem; /* ~26px */
+  font-weight: 700;
+  color: #d32f2f;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.01em;
+}
+.event-section-heading {
+  font-size: 1.13rem; /* ~18px */
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.3rem;
+  margin-top: 0.7rem;
+  font-family: "Poppins", "Nunito", "Open Sans", sans-serif;
+}
+.event-desc {
+  margin: 0.2rem 0 0.7rem 0;
+  font-size: 1.05rem;
+  color: #444;
+  line-height: 1.6;
+}
+.clothes-needed-badges {
+  margin: 0.2rem 0 0.7rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
 }

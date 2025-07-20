@@ -975,53 +975,105 @@ function loadUserBadges() {
     <div class="loading-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
       <div class="loading-spinner"></div>
       <h4>Loading Your Badges...</h4>
-      <p>Calculating badges based on your donations.</p>
+      <p>Calculating badges based on your completed donations.</p>
     </div>
   `;
 
-  // Get user's donation count from Firebase
-  const userDonationsRef = window.db.ref(
-    `users/${currentUserUid}/donatedClothes`
-  );
+  // Get current user's email to match with completed requests
+  const currentUserRef = window.db.ref(`users/${currentUserUid}`);
 
-  userDonationsRef
+  currentUserRef
     .once("value")
-    .then(function (snapshot) {
-      const donationCount = snapshot.exists() ? snapshot.numChildren() : 0;
-      console.log("User donation count:", donationCount);
+    .then(function (userSnapshot) {
+      if (!userSnapshot.exists()) {
+        console.error("Current user not found");
+        userBadgesGrid.innerHTML = `
+          <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+            <div class="icon">❌</div>
+            <h4>Error Loading Badges</h4>
+            <p>User profile not found. Please refresh the page.</p>
+          </div>
+        `;
+        return;
+      }
 
-      // Calculate which badges the user has earned
-      const earnedBadges = BADGE_LEVELS.filter(
-        (badge) => donationCount >= badge.count
-      );
-      const nextBadge = BADGE_LEVELS.find(
-        (badge) => donationCount < badge.count
-      );
+      const userData = userSnapshot.val();
+      const userEmail = userData.email;
 
-      console.log("Earned badges:", earnedBadges);
-      console.log("Next badge to earn:", nextBadge);
+      if (!userEmail) {
+        console.error("User email not found");
+        userBadgesGrid.innerHTML = `
+          <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+            <div class="icon">❌</div>
+            <h4>Error Loading Badges</h4>
+            <p>User email not found. Please refresh the page.</p>
+          </div>
+        `;
+        return;
+      }
 
-      // Render all badges
-      userBadgesGrid.innerHTML = "";
+      console.log("Current user email:", userEmail);
 
-      BADGE_LEVELS.forEach((badge, index) => {
-        const isEarned = donationCount >= badge.count;
-        const progress = Math.min((donationCount / badge.count) * 100, 100);
+      // Get completed requests for this user (as donor)
+      const requestsRef = window.db.ref("requests");
 
-        const badgeCard = document.createElement("div");
-        badgeCard.className = `badge-card ${
-          isEarned ? "earned" : "not-earned"
-        }`;
+      return requestsRef.once("value").then(function (requestsSnapshot) {
+        let completedDonationCount = 0;
 
-        badgeCard.innerHTML = `
+        if (requestsSnapshot.exists()) {
+          requestsSnapshot.forEach(function (requestSnapshot) {
+            const request = requestSnapshot.val();
+
+            // Count only completed requests where this user is the donor
+            if (
+              request.status === "completed" &&
+              request.donorEmail === userEmail
+            ) {
+              completedDonationCount++;
+              console.log("Found completed donation:", request.clothName);
+            }
+          });
+        }
+
+        console.log("User completed donation count:", completedDonationCount);
+
+        // Calculate which badges the user has earned
+        const earnedBadges = BADGE_LEVELS.filter(
+          (badge) => completedDonationCount >= badge.count
+        );
+        const nextBadge = BADGE_LEVELS.find(
+          (badge) => completedDonationCount < badge.count
+        );
+
+        console.log("Earned badges:", earnedBadges);
+        console.log("Next badge to earn:", nextBadge);
+
+        // Render all badges
+        userBadgesGrid.innerHTML = "";
+
+        BADGE_LEVELS.forEach((badge, index) => {
+          const isEarned = completedDonationCount >= badge.count;
+          const progress = Math.min(
+            (completedDonationCount / badge.count) * 100,
+            100
+          );
+
+          const badgeCard = document.createElement("div");
+          badgeCard.className = `badge-card ${
+            isEarned ? "earned" : "not-earned"
+          }`;
+
+          badgeCard.innerHTML = `
           <div class="badge-tooltip">
             ${badge.name}: Donated ${badge.count} cloth${
-          badge.count > 1 ? "es" : ""
-        }
+            badge.count > 1 ? "es" : ""
+          }
             ${
               !isEarned
-                ? `<br>You need ${badge.count - donationCount} more donation${
-                    badge.count - donationCount > 1 ? "s" : ""
+                ? `<br>You need ${
+                    badge.count - completedDonationCount
+                  } more donation${
+                    badge.count - completedDonationCount > 1 ? "s" : ""
                   }`
                 : ""
             }
@@ -1029,8 +1081,8 @@ function loadUserBadges() {
           <div class="badge-icon">${badge.icon}</div>
           <div class="badge-name">${badge.name}</div>
           <div class="badge-condition">Donated ${badge.count} cloth${
-          badge.count > 1 ? "es" : ""
-        }</div>
+            badge.count > 1 ? "es" : ""
+          }</div>
           ${
             !isEarned
               ? `
@@ -1042,13 +1094,13 @@ function loadUserBadges() {
           }
         `;
 
-        userBadgesGrid.appendChild(badgeCard);
-      });
+          userBadgesGrid.appendChild(badgeCard);
+        });
 
-      // Show summary if user has earned badges
-      if (earnedBadges.length > 0) {
-        const summaryDiv = document.createElement("div");
-        summaryDiv.style.cssText = `
+        // Show summary if user has earned badges
+        if (earnedBadges.length > 0) {
+          const summaryDiv = document.createElement("div");
+          summaryDiv.style.cssText = `
           grid-column: 1 / -1;
           text-align: center;
           margin-bottom: 1rem;
@@ -1057,39 +1109,40 @@ function loadUserBadges() {
           border-radius: 12px;
           border: 2px solid #059669;
         `;
-        summaryDiv.innerHTML = `
+          summaryDiv.innerHTML = `
           <h4 style="color: #065f46; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
             🎉 You've earned ${earnedBadges.length} badge${
-          earnedBadges.length > 1 ? "s" : ""
-        }!
+            earnedBadges.length > 1 ? "s" : ""
+          }!
           </h4>
           <p style="color: #065f46; margin: 0; font-size: 0.9rem;">
-            Total donations: ${donationCount} cloth${
-          donationCount > 1 ? "es" : ""
-        }
+            Total completed donations: ${completedDonationCount} cloth${
+            completedDonationCount > 1 ? "es" : ""
+          }
             ${
               nextBadge
                 ? `<br>Next badge: ${nextBadge.name} (${
-                    nextBadge.count - donationCount
+                    nextBadge.count - completedDonationCount
                   } more donation${
-                    nextBadge.count - donationCount > 1 ? "s" : ""
+                    nextBadge.count - completedDonationCount > 1 ? "s" : ""
                   } needed)`
                 : ""
             }
           </p>
         `;
-        userBadgesGrid.insertBefore(summaryDiv, userBadgesGrid.firstChild);
-      }
+          userBadgesGrid.insertBefore(summaryDiv, userBadgesGrid.firstChild);
+        }
+      });
     })
     .catch(function (error) {
       console.error("Error loading user badges:", error);
       userBadgesGrid.innerHTML = `
-        <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-          <div class="icon">❌</div>
-          <h4>Error Loading Badges</h4>
-          <p>Error loading badges. Please refresh the page.</p>
-        </div>
-      `;
+      <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+        <div class="icon">❌</div>
+        <h4>Error Loading Badges</h4>
+        <p>Error loading badges. Please refresh the page.</p>
+      </div>
+    `;
     });
 }
 
